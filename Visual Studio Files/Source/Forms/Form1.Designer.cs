@@ -121,6 +121,7 @@ namespace ReinforcementLearning
             this.label12 = new System.Windows.Forms.Label();
             this.comboboxSteps = new System.Windows.Forms.ComboBox();
             this.comboboxY = new System.Windows.Forms.ComboBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.pictureBox12 = new System.Windows.Forms.PictureBox();
@@ -154,7 +155,6 @@ namespace ReinforcementLearning
             this.label23 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.textboxEpisodesprogress = new System.Windows.Forms.TextBox();
-            this.textboxNprogress = new System.Windows.Forms.TextBox();
             this.textboxStepsprogress = new System.Windows.Forms.TextBox();
             this.groupboxCurrentposition = new System.Windows.Forms.GroupBox();
             this.textboxCurrentsquare = new System.Windows.Forms.TextBox();
@@ -170,9 +170,7 @@ namespace ReinforcementLearning
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.textboxEprogress = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
             this.textboxYprogress = new System.Windows.Forms.TextBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox17 = new System.Windows.Forms.PictureBox();
@@ -187,6 +185,7 @@ namespace ReinforcementLearning
             this.groupboxCountdown.SuspendLayout();
             this.groupboxConfiguration.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).BeginInit();
@@ -209,7 +208,6 @@ namespace ReinforcementLearning
             this.groupboxCans.SuspendLayout();
             this.groupboxRewarddata.SuspendLayout();
             this.groupboxCurrentposition.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).BeginInit();
@@ -218,6 +216,7 @@ namespace ReinforcementLearning
             // 
             // groupboxInitialsettings
             // 
+            this.groupboxInitialsettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.groupboxInitialsettings.Controls.Add(this.label9);
             this.groupboxInitialsettings.Controls.Add(this.textboxInitialNumberofsteps);
             this.groupboxInitialsettings.Controls.Add(this.textboxInitialNinitial);
@@ -257,7 +256,7 @@ namespace ReinforcementLearning
             // 
             // textboxInitialNinitial
             // 
-            this.textboxInitialNinitial.Location = new System.Drawing.Point(123, 104);
+            this.textboxInitialNinitial.Location = new System.Drawing.Point(210, 104);
             this.textboxInitialNinitial.Margin = new System.Windows.Forms.Padding(4);
             this.textboxInitialNinitial.Name = "textboxInitialNinitial";
             this.textboxInitialNinitial.ReadOnly = true;
@@ -276,7 +275,7 @@ namespace ReinforcementLearning
             // 
             // textboxInitialY
             // 
-            this.textboxInitialY.Location = new System.Drawing.Point(210, 104);
+            this.textboxInitialY.Location = new System.Drawing.Point(122, 104);
             this.textboxInitialY.Margin = new System.Windows.Forms.Padding(4);
             this.textboxInitialY.Name = "textboxInitialY";
             this.textboxInitialY.ReadOnly = true;
@@ -388,7 +387,7 @@ namespace ReinforcementLearning
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(209, 85);
+            this.label11.Location = new System.Drawing.Point(121, 85);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(15, 17);
@@ -408,7 +407,7 @@ namespace ReinforcementLearning
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(121, 84);
+            this.label8.Location = new System.Drawing.Point(208, 85);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(16, 17);
@@ -432,9 +431,9 @@ namespace ReinforcementLearning
             this.buttonRestart.Name = "buttonRestart";
             this.buttonRestart.Size = new System.Drawing.Size(210, 27);
             this.buttonRestart.TabIndex = 5;
-            this.buttonRestart.Text = "Restart algorithm";
+            this.buttonRestart.Text = "Stop algorithm";
             this.buttonRestart.UseVisualStyleBackColor = true;
-            this.buttonRestart.Click += new System.EventHandler(this.reset_algorithm);
+            this.buttonRestart.Click += new System.EventHandler(this.restart_algorithm_button_click);
             // 
             // comboboxQmatrixselect
             // 
@@ -721,9 +720,10 @@ namespace ReinforcementLearning
             this.comboboxHistoryepisode.TabIndex = 22;
             this.comboboxHistoryepisode.Text = "View prior episodes...";
             this.comboboxHistoryepisode.DropDown += new System.EventHandler(this.dropdown_opened);
-            this.comboboxHistoryepisode.SelectedIndexChanged += new System.EventHandler(this.history_index_changed);
+            this.comboboxHistoryepisode.SelectionChangeCommitted += new System.EventHandler(this.history_index_changed);
             this.comboboxHistoryepisode.DropDownClosed += new System.EventHandler(this.dropdown_closed);
             this.comboboxHistoryepisode.Click += new System.EventHandler(this.combobox_clicked_clear_text);
+            this.comboboxHistoryepisode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboboxHistoryepisode_KeyPress);
             // 
             // groupboxHistory
             // 
@@ -739,7 +739,6 @@ namespace ReinforcementLearning
             // 
             // comboboxHistorystep
             // 
-            this.comboboxHistorystep.Enabled = false;
             this.comboboxHistorystep.FormattingEnabled = true;
             this.comboboxHistorystep.Location = new System.Drawing.Point(35, 53);
             this.comboboxHistorystep.Name = "comboboxHistorystep";
@@ -747,9 +746,10 @@ namespace ReinforcementLearning
             this.comboboxHistorystep.TabIndex = 23;
             this.comboboxHistorystep.Text = "View prior steps...";
             this.comboboxHistorystep.DropDown += new System.EventHandler(this.dropdown_opened);
-            this.comboboxHistorystep.SelectedIndexChanged += new System.EventHandler(this.comboboxHistorystep_SelectedIndexChanged);
+            this.comboboxHistorystep.SelectionChangeCommitted += new System.EventHandler(this.comboboxHistorystep_SelectedIndexChanged);
             this.comboboxHistorystep.DropDownClosed += new System.EventHandler(this.dropdown_closed);
             this.comboboxHistorystep.Click += new System.EventHandler(this.combobox_clicked_clear_text);
+            this.comboboxHistorystep.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboboxHistorystep_KeyPress);
             // 
             // groupboxAlgorithmprogress
             // 
@@ -795,9 +795,11 @@ namespace ReinforcementLearning
             this.comboboxDelayms.Name = "comboboxDelayms";
             this.comboboxDelayms.Size = new System.Drawing.Size(89, 24);
             this.comboboxDelayms.TabIndex = 26;
+            this.comboboxDelayms.Text = "5";
             this.comboboxDelayms.DropDown += new System.EventHandler(this.dropdown_opened);
             this.comboboxDelayms.DropDownClosed += new System.EventHandler(this.dropdown_closed);
             this.comboboxDelayms.Click += new System.EventHandler(this.combobox_clicked_clear_text);
+            this.comboboxDelayms.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboboxDelayms_KeyPress);
             this.comboboxDelayms.Leave += new System.EventHandler(this.comboboxDelayms_Leave);
             // 
             // label16
@@ -1101,7 +1103,7 @@ namespace ReinforcementLearning
             this.button10.TabIndex = 12;
             this.button10.Text = "Reset config";
             this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.button10.Click += new System.EventHandler(this.reset_config_button_click);
             // 
             // buttonStartAlgorithm
             // 
@@ -1147,7 +1149,7 @@ namespace ReinforcementLearning
             this.comboboxEpisode.TabIndex = 1;
             this.comboboxEpisode.DropDown += new System.EventHandler(this.dropdown_opened);
             this.comboboxEpisode.SelectedIndexChanged += new System.EventHandler(this.set_episode_from_dropdown);
-            this.comboboxEpisode.DropDownClosed += new System.EventHandler(this.dropdown_closed);
+            this.comboboxEpisode.DropDownClosed += new System.EventHandler(this.dropdown_closed_numberepisodes);
             this.comboboxEpisode.Click += new System.EventHandler(this.combobox_clicked_clear_text);
             this.comboboxEpisode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboboxEpisode_KeyPress);
             // 
@@ -1235,6 +1237,17 @@ namespace ReinforcementLearning
             this.comboboxY.DropDownClosed += new System.EventHandler(this.dropdown_closed);
             this.comboboxY.Click += new System.EventHandler(this.combobox_clicked_clear_text);
             this.comboboxY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboboxY_KeyPress);
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox4.BackgroundImage")));
+            this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox4.Location = new System.Drawing.Point(195, 13);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(40, 52);
+            this.pictureBox4.TabIndex = 61;
+            this.pictureBox4.TabStop = false;
             // 
             // pictureBox7
             // 
@@ -1436,13 +1449,11 @@ namespace ReinforcementLearning
             this.groupboxSessionprogress.Controls.Add(this.label23);
             this.groupboxSessionprogress.Controls.Add(this.label18);
             this.groupboxSessionprogress.Controls.Add(this.textboxEpisodesprogress);
-            this.groupboxSessionprogress.Controls.Add(this.textboxNprogress);
             this.groupboxSessionprogress.Controls.Add(this.textboxStepsprogress);
             this.groupboxSessionprogress.Controls.Add(this.groupboxCurrentposition);
             this.groupboxSessionprogress.Controls.Add(this.label19);
             this.groupboxSessionprogress.Controls.Add(this.label20);
             this.groupboxSessionprogress.Controls.Add(this.textboxEprogress);
-            this.groupboxSessionprogress.Controls.Add(this.label22);
             this.groupboxSessionprogress.Controls.Add(this.textboxYprogress);
             this.groupboxSessionprogress.Enabled = false;
             this.groupboxSessionprogress.Location = new System.Drawing.Point(1409, 367);
@@ -1557,7 +1568,7 @@ namespace ReinforcementLearning
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(209, 16);
+            this.label23.Location = new System.Drawing.Point(125, 16);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(15, 17);
@@ -1582,15 +1593,6 @@ namespace ReinforcementLearning
             this.textboxEpisodesprogress.ReadOnly = true;
             this.textboxEpisodesprogress.Size = new System.Drawing.Size(75, 22);
             this.textboxEpisodesprogress.TabIndex = 13;
-            // 
-            // textboxNprogress
-            // 
-            this.textboxNprogress.Location = new System.Drawing.Point(121, 37);
-            this.textboxNprogress.Margin = new System.Windows.Forms.Padding(4);
-            this.textboxNprogress.Name = "textboxNprogress";
-            this.textboxNprogress.ReadOnly = true;
-            this.textboxNprogress.Size = new System.Drawing.Size(75, 22);
-            this.textboxNprogress.TabIndex = 21;
             // 
             // textboxStepsprogress
             // 
@@ -1746,35 +1748,14 @@ namespace ReinforcementLearning
             this.textboxEprogress.Size = new System.Drawing.Size(79, 22);
             this.textboxEprogress.TabIndex = 17;
             // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(121, 17);
-            this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(16, 17);
-            this.label22.TabIndex = 20;
-            this.label22.Text = "η";
-            // 
             // textboxYprogress
             // 
-            this.textboxYprogress.Location = new System.Drawing.Point(206, 37);
+            this.textboxYprogress.Location = new System.Drawing.Point(122, 37);
             this.textboxYprogress.Margin = new System.Windows.Forms.Padding(4);
             this.textboxYprogress.Name = "textboxYprogress";
             this.textboxYprogress.ReadOnly = true;
             this.textboxYprogress.Size = new System.Drawing.Size(79, 22);
             this.textboxYprogress.TabIndex = 13;
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox4.BackgroundImage = global::ReinforcementLearning.Properties.Resources.fry_squinting_small;
-            this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox4.Location = new System.Drawing.Point(195, 13);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(40, 52);
-            this.pictureBox4.TabIndex = 61;
-            this.pictureBox4.TabStop = false;
             // 
             // pictureBox1
             // 
@@ -1876,6 +1857,7 @@ namespace ReinforcementLearning
             this.groupboxConfiguration.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).EndInit();
@@ -1902,7 +1884,6 @@ namespace ReinforcementLearning
             this.groupboxRewarddata.PerformLayout();
             this.groupboxCurrentposition.ResumeLayout(false);
             this.groupboxCurrentposition.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).EndInit();
@@ -1953,9 +1934,7 @@ namespace ReinforcementLearning
         private TextBox textboxInitialNinitial;
         private Label label21;
         private Label label23;
-        private TextBox textboxNprogress;
         private Label label19;
-        private Label label22;
         private ComboBox comboboxQmatrixselect;
         private TextBox textboxQmatrixcurrent;
         private Label label17;
