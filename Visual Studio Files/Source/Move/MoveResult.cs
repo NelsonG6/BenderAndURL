@@ -9,11 +9,13 @@ namespace ReinforcementLearning
 
         public static readonly MoveResult CanMissing;
         public static readonly MoveResult CanCollected;
-        public static readonly MoveResult MoveSuccessful;
-        public static readonly MoveResult MoveFailed;
-        public static readonly List<MoveResult> list_of_move_results;
+        public static readonly MoveResult TravelSucceeded;
+        public static readonly MoveResult TravelFailed;
+        public static readonly MoveResult EnemeyEncountered;        
 
         private static MoveResult initialized_result;
+
+        public static Dictionary<MoveResult, double> list;
 
         public MoveResult(string to_set)
         {
@@ -22,18 +24,21 @@ namespace ReinforcementLearning
 
         static MoveResult()
         {
+            list = new Dictionary<MoveResult, double>(); //initialize reinforcement factor list
+
             CanMissing = new MoveResult("Can missing");
             CanCollected = new MoveResult("Can collected");
-            MoveSuccessful = new MoveResult("Move successful");
-            MoveFailed = new MoveResult("Move failed");
-
-            list_of_move_results = new List<MoveResult>();
-            list_of_move_results.Add(CanMissing);
-            list_of_move_results.Add(CanCollected);
-            list_of_move_results.Add(MoveSuccessful);
-            list_of_move_results.Add(MoveFailed);
-
+            TravelSucceeded = new MoveResult("Move successful");
+            TravelFailed = new MoveResult("Move failed");
+            EnemeyEncountered = new MoveResult("Enemey encountered");
             initialized_result = new MoveResult("Initialized");
+
+            list.Add(CanMissing, InitialSettings.CanMissingReward);
+            list.Add(CanCollected, InitialSettings.CanGrabbedReward);
+            list.Add(TravelSucceeded, InitialSettings.MoveSuccessfulReward);
+            list.Add(TravelFailed, InitialSettings.MoveFailedReward);
+            list.Add(EnemeyEncountered, InitialSettings.EnemyEncountered);
+
         }
     }
 }

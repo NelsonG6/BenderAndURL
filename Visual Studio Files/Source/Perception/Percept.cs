@@ -11,7 +11,7 @@ namespace ReinforcementLearning
         public static readonly Percept Empty;
         public static readonly Percept Can;
         public static readonly Percept Initialized; //Just for debugging mostly
-        public static readonly Percept Enemey;
+        public static readonly Percept Enemy;
 
         private readonly static List<Percept> list; //for counting
 
@@ -22,13 +22,13 @@ namespace ReinforcementLearning
             Wall = new Percept("Wall");
             Empty = new Percept("Empty");
             Can = new Percept("Can");
-            Enemey = new Percept("Enemey");
+            Enemy = new Percept("Enemey");
 
             list = new List<Percept>();
             list.Add(Wall);
             list.Add(Empty);
             list.Add(Can);
-            list.Add(Enemey);
+            list.Add(Enemy);
             Initialized = new Percept("initialized");
         }
 

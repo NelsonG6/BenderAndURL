@@ -15,9 +15,9 @@ namespace ReinforcementLearning
             SquareBoardDisplay.set_backgrounds(); //This initializes a dictionary of "boardVisistedState" - background image pairs.
 
             //Initialize 10x10 grid
-            for (int i = 0; i < InitialSettings.SizeOfBoard(); i++)
+            for (int i = 0; i < InitialSettings.SizeOfBoard; i++)
             {
-                for (int j = 0; j < InitialSettings.SizeOfBoard(); j++)
+                for (int j = 0; j < InitialSettings.SizeOfBoard; j++)
                 {
                     board_data[i].Add(new SquareBoardDisplay(i, j));
                 }

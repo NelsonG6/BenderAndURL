@@ -90,6 +90,11 @@ namespace ReinforcementLearning
         //Main entry point for my source code
         static FormsHandler()
         {
+
+        }
+
+        static public void load()
+        {
             picture_board = new BoardDisplay();
             loaded_state = new AlgorithmState();
 
@@ -104,16 +109,20 @@ namespace ReinforcementLearning
             //Initialize dropdown boxes
             control_progress_steps.SelectedIndex = 0;
             control_progress_episodes.Text = "0"; ;
-            control_progress_delay.Text = InitialSettings.MS_Delay().ToString();
+            control_progress_delay.Text = InitialSettings.MS_Delay.ToString();
 
-            foreach(var i in list_qmatrix_comboboxes)
+            foreach (var i in list_qmatrix_comboboxes)
             {
                 i.Value.SelectedIndex = -1;
             }
-            
+
             DisplayInitialSettings();
         }
 
+        static public void Initialize()
+        {
+
+        }
 
         //This is ran every time we step through the algorithm.
         //Handles updating all the fields that change every time we look at new data
@@ -141,7 +150,7 @@ namespace ReinforcementLearning
                 //This function should only be called at the algorithm start, or from a dropdown that has a valid q-matrix combination.
                 //These textboxes handle percepts
 
-                PerceptionState to_view = loaded_state.board_data.GetUnitPerception();
+                PerceptionState to_view = loaded_state.board_data.units[UnitType.Bender].perception_data;
 
                 foreach (var i in Move.HorizontalMovesAndGrab)
                 {
@@ -193,10 +202,10 @@ namespace ReinforcementLearning
             n_initial.Text = GetString(loaded_state.live_qmatrix.n_current);
             y_initial.Text = GetString(loaded_state.live_qmatrix.y_current);
             e_initial.Text = GetString(loaded_state.live_qmatrix.e_current);
-            empty_square_punishment_textbox.Text = ReinforcementFactors.list[MoveResult.CanMissing].ToString();
-            wall_punishment_textbox.Text = ReinforcementFactors.list[MoveResult.MoveFailed].ToString();
-            beer_reward_textbox.Text = ReinforcementFactors.list[MoveResult.CanCollected].ToString();
-            successful_move_textbox.Text = ReinforcementFactors.list[MoveResult.MoveSuccessful].ToString();
+            empty_square_punishment_textbox.Text = MoveResult.list[MoveResult.CanMissing].ToString();
+            wall_punishment_textbox.Text = MoveResult.list[MoveResult.TravelFailed].ToString();
+            beer_reward_textbox.Text = MoveResult.list[MoveResult.CanCollected].ToString();
+            successful_move_textbox.Text = MoveResult.list[MoveResult.TravelSucceeded].ToString();
         }
 
         //This is used to display rows of the qmatrix and the q-values for each move
@@ -371,7 +380,7 @@ namespace ReinforcementLearning
             if(changed_dropdown.SelectedText != "None.")
             {
 
-                PerceptionState to_set = new PerceptionState(Unit.Bender);
+                PerceptionState to_set = new PerceptionState(UnitType.Bender);
                 Move percept_move = null;
 
                 foreach (var i in Move.HorizontalMovesAndGrab)
@@ -390,7 +399,6 @@ namespace ReinforcementLearning
                 }
 
                 to_set.set_name();
-                to_set = PerceptionState.list_of_states[to_set]; //Convert to static instance
 
                 //This state may not exist in our q-matrix states, because we only changed one of the dropdowns.
                 //The best solution i think is to make the other dropdowns find the most accurate state.

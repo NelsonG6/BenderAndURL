@@ -23,12 +23,15 @@ namespace ReinforcementLearning
         public readonly static Move UpRight;
         public readonly static Move DownLeft;
         public readonly static Move DownRight;
+        public readonly static Move Wait;
 
         public readonly static List<Move> HorizontalMovesAndGrab;
 
         public readonly static List<Move> AllMoves;
 
         public readonly static List<Move> CardinalMoves;
+
+        public readonly static List<Move> Diagonals;
 
         public bool to_grab; //determines if we grab the can. This is done after the move step.
         //public string name_of_move; //The description of the move, which is used to translate this move into actions when the result isn't movement-based.'
@@ -44,6 +47,8 @@ namespace ReinforcementLearning
             //These should be the only instances of moves created in the program
             //Q moves will be generated frequently, however
             int move_order = 0;
+
+            Diagonals = new List<Move>();
 
             Left = new Move();
             Left.grid_adjustment[0] = -1;
@@ -135,8 +140,18 @@ namespace ReinforcementLearning
             AllMoves.Add(DownLeft);
             AllMoves.Add(DownRight);
 
-            
+            Wait = new Move();
+            Wait.grid_adjustment[0] = 0;
+            Wait.grid_adjustment[1] = 0;
+            Wait.to_grab = false;
+            Wait.short_name = "W";
+            Wait.long_name = "Wait";
+            Wait.order = ++move_order;
 
+            Diagonals.Add(UpLeft);
+            Diagonals.Add(UpRight);
+            Diagonals.Add(DownLeft);
+            Diagonals.Add(DownRight);
         }
 
         public static void Initialize()

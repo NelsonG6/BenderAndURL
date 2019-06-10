@@ -7,108 +7,62 @@ namespace ReinforcementLearning
     static class InitialSettings
     {
         //Q-matrix
-        private readonly static double n_data; //learning rate
-        private readonly static double y_data; //discount
-        private readonly static double e_data; //random factor
+        public readonly static double n; //learning rate
+        public readonly static double y; //discount
+        public readonly static double e; //random factor
 
-        private readonly static int episode_limit_data;
-        private readonly static int step_limit_data;
+        public readonly static int EpisodeLimit;
+        public readonly static int StepLimit;
 
-        private readonly static int ms_delay_data;
+        public readonly static int MS_Delay;
 
-        private static readonly int x_offset_data;
-        private static readonly int y_offset_data;
-        private static readonly int edge_length_data;
-        private static readonly int rounding_digit_data;
-        private static readonly int size_of_board_data;
+        public static readonly int X_Offset;
+        public static readonly int Y_Offset;
+        public static readonly int EdgeLength;
+        public static readonly int RoundingDigitRate;
+        public static readonly int SizeOfBoard;
+
+        public static readonly int CanMissingReward;
+        public static readonly int CanGrabbedReward;
+        public static readonly int MoveSuccessfulReward;
+        public static readonly int MoveFailedReward;
+        public static readonly int EnemyEncountered;
 
         static InitialSettings()
         {
-            n_data = .1F; //Epsilon; do we explore or exploit. Random factor for taking a best move or random move.
-            y_data = .9F; //Gamma; our discounted rate.
-            e_data = .2F; //The learning rate
+            n = .1F; //Epsilon; do we explore or exploit. Random factor for taking a best move or random move.
+            y = .9F; //Gamma; our discounted rate.
+            e = .2F; //The learning rate
 
             //Default limit
-            episode_limit_data = 5000;
-            step_limit_data = 200;
+            EpisodeLimit = 5000;
+            StepLimit = 200;
 
             //reinforcement factors
-            ms_delay_data = 5;
+            MS_Delay = 5;
 
-            x_offset_data = 50;
-            y_offset_data = 55;
-            edge_length_data = 75;
-            rounding_digit_data = 5;
+            X_Offset = 50;
+            Y_Offset = 55;
+            EdgeLength = 75;
+            RoundingDigitRate = 5;
 
-            size_of_board_data = 10;
-        }
+            SizeOfBoard = 10;
+
+            CanMissingReward = -1;
+            CanGrabbedReward = 10;
+            MoveSuccessfulReward = 0;
+            MoveFailedReward = -5;
+            EnemyEncountered = -20;
+    }
 
         //initialize all static classes here
         static public void Initialize()
         {
-            /*
-            Walls.Initialize();
-            Move.Initialize();
+           
+           
+           
             
-            */
 
-            Unit.Initialize();
-
-        }
-
-        static public int X_Offset()
-        {
-            return x_offset_data;
-        }
-
-        static public int Y_Offset()
-        {
-            return y_offset_data;
-        }
-
-        static public int EdgeLength()
-        {
-            return edge_length_data;
-        }
-
-        static public double MS_Delay()
-        {
-            return ms_delay_data;
-        }
-
-        static public double n()
-        {
-            return n_data;
-        }
-
-        static public double y()
-        {
-            return y_data;
-        }
-
-        static public double e()
-        {
-            return e_data;
-        }
-
-        static public int EpisodeLimit()
-        {
-            return episode_limit_data;
-        }
-
-        static public int StepLimit()
-        {
-            return step_limit_data;
-        }
-
-        static public int RoundingDigits()
-        {
-            return rounding_digit_data;
-        }
-
-        static public int SizeOfBoard()
-        {
-            return size_of_board_data;
         }
     }
 

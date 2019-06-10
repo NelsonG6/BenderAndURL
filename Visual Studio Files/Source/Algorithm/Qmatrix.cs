@@ -41,22 +41,22 @@ namespace ReinforcementLearning
             matrix_data = new Dictionary<PerceptionState, ValueSet>();
             did_we_update = false;
 
-            e_current = InitialSettings.e(); //Epsilon; do we explore or exploit. Random factor for taking a best move or random move.
-            y_current = InitialSettings.y(); //Gamma; our discounted rate.
-            n_current = InitialSettings.n(); //The learning rate
-            y = InitialSettings.y();
+            e_current = InitialSettings.e; //Epsilon; do we explore or exploit. Random factor for taking a best move or random move.
+            y_current = InitialSettings.y; //Gamma; our discounted rate.
+            n_current = InitialSettings.n; //The learning rate
+            y = InitialSettings.y;
 
-            step_limit = InitialSettings.StepLimit();  //limits
-            episode_limit = InitialSettings.EpisodeLimit();
+            step_limit = InitialSettings.StepLimit;  //limits
+            episode_limit = InitialSettings.EpisodeLimit;
 
         }
 
         static Qmatrix()
         {
             //Default limit
-            e_initial = InitialSettings.e();
-            episode_limit = InitialSettings.EpisodeLimit();
-            step_limit = InitialSettings.StepLimit();
+            e_initial = InitialSettings.e;
+            episode_limit = InitialSettings.EpisodeLimit;
+            step_limit = InitialSettings.StepLimit;
         }
         
         public Qmatrix(Qmatrix copy_from)

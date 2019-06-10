@@ -15,15 +15,15 @@ namespace ReinforcementLearning
         public void SetPicture()
         {
             //Set can and/or bender
-            if (beer_can_present && UnitsPresent[Unit.Bender])
+            if (beer_can_present && UnitsPresent[UnitType.Bender])
                 pictureData.Image = Properties.Resources.bender_and_beer;
-            else if (beer_can_present && UnitsPresent[Unit.Bender])
+            else if (beer_can_present && UnitsPresent[UnitType.Url])
                 pictureData.Image = Properties.Resources.url_and_beer;
-            else if (UnitsPresent[Unit.Url])
+            else if (UnitsPresent[UnitType.Url])
                 pictureData.Image = Properties.Resources.URL;
             else if (beer_can_present)
                 pictureData.Image = Properties.Resources.beer;
-            else if (UnitsPresent[Unit.Bender])
+            else if (UnitsPresent[UnitType.Bender])
                 pictureData.Image = Properties.Resources.bender;
             
             else
@@ -36,7 +36,7 @@ namespace ReinforcementLearning
 
         public void CopyStatus(SquareBoardBase copy_from)
         {
-            UnitsPresent = new Dictionary<Unit, bool>();
+            UnitsPresent = new Dictionary<UnitBase, bool>();
             foreach(var i in copy_from.UnitsPresent)
             {
                 UnitsPresent.Add(i.Key, i.Value);

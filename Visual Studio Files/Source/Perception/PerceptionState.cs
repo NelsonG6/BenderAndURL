@@ -17,33 +17,20 @@ namespace ReinforcementLearning
 
         //Dumb, but it lets you access the static and persistent perception state
         //By passing in one that you built with equal properties.
-        static public Dictionary<PerceptionState, PerceptionState> list_of_states;
 
-        static PerceptionState()
-        {
-            //Create all 243 possible configurations
+        private static int ID_count;
 
-            list_of_states = new Dictionary<PerceptionState, PerceptionState>();
-
-
-
-        }        
-
-        public static Dictionary<PerceptionState, PerceptionState> get_list()
-        {
-            return list_of_states;
-        }
-
-
-        //Constructor called for when we are detected a state in the wild, and want to start corresponding it
+        //Constructor called for when we are detecteing a state in the wild, and want to start corresponding it
         //to the static type.
-        public PerceptionState(UnitBase use_movelist)
+        public PerceptionState(UnitType use_movelist)
         {
             perception_data = new SortedDictionary<Move, Percept>();
-            foreach(var i in use_movelist.unit_move_list)
+            foreach(var i in use_movelist.PerceptionCauses)
             {
                 perception_data.Add(i, Percept.Initialized);
             }
+
+            ID = ID_count++;
 
             set_name();
         }

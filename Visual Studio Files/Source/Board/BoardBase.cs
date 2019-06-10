@@ -15,7 +15,7 @@ namespace ReinforcementLearning
         {
             board_data = new List<List<SquareBoardBase>>(); //Initialize the board here, but the squares will be added by the child classes
 
-            for (int i = 0; i < InitialSettings.SizeOfBoard(); i++)
+            for (int i = 0; i < InitialSettings.SizeOfBoard; i++)
             {
                 board_data.Add(new List<SquareBoardBase>());
                 //Cant add squares here because they wont be the correct type later

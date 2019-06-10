@@ -11,7 +11,7 @@ namespace ReinforcementLearning
         public bool beer_can_present;
 
         //This will only store Unit.Bender and unit.Url, no instances that are on the board
-        public Dictionary<Unit, bool> UnitsPresent; //A list of units we contain in this square
+        public Dictionary<UnitBase, bool> UnitsPresent; //A list of units we contain in this square
         //Even though only one unit is possible at a time, this is necessary so we can store a presence value for either unit.
 
         public SquareVisitedState visited_state; //Using a string to store one of three values: last move, unexplored, explored
@@ -24,8 +24,8 @@ namespace ReinforcementLearning
             visited_state = SquareVisitedState.unexplored(); //Deafult
 
             //Initialize units present
-            UnitsPresent = new Dictionary<Unit, bool>();
-            foreach(var i in Unit.base_units)
+            UnitsPresent = new Dictionary<UnitBase, bool>();
+            foreach(var i in UnitType.base_units)
             {
                 UnitsPresent.Add(i, false);
             }
@@ -42,7 +42,7 @@ namespace ReinforcementLearning
         //Pretty sure this isn't necessary since a constructor can just do this
         public void copy_status(SquareBoardBase copy_from)
         {
-            UnitsPresent = new Dictionary<Unit, bool>();
+            UnitsPresent = new Dictionary<UnitBase, bool>();
             foreach (var i in copy_from.UnitsPresent)
             {
                 UnitsPresent.Add(i.Key, i.Value);
