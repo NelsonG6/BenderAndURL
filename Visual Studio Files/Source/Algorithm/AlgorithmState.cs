@@ -18,16 +18,14 @@ namespace ReinforcementLearning
         static public bool algorithm_ended;
 
 
-
         //Non-static members
         public BoardGame board_data; //Stores the state of the cans and walls (bender is stored with other coordinates)
 
+        private StatusMessage status_message; //Used for debugging
         public Qmatrix live_qmatrix; //Moves will be generated from here.
 
         public PerceptionState bender_perception_starting;
         public PerceptionState bender_perception_ending;
-
-
 
         public double episode_rewards; //Session - Reward data
         public double total_rewards;
@@ -37,8 +35,6 @@ namespace ReinforcementLearning
 
         public Move move_this_step; //The move we took this step, stored for the status message
         public MoveResult result_this_step; //Moveresult stored for status
-
-
 
         public double obtained_reward; //The raw reward for the action we took
 
@@ -93,12 +89,41 @@ namespace ReinforcementLearning
                 state_history.Add(new AlgorithmEpisode(state_history.Count + 1)); //Add the first empty episode
             step_with.TakeStep();
             state_history.Last().Add(step_with); //Add the state to the history list, after everything possible has been done to it.    
+            step_with.GenerateStatusMessage();
+        }
+
+
+        //At the algorithm manager, generate step is ambiguous with actually stepping through the algorithm,
+        //Or starting the algorithm, and making the first history entry at step 0.
+        //Here, a step only happens when we have been asked by the manager to *actually* take a step.
+        public void TakeStep()
+        {
+            move_this_step = live_qmatrix.GenerateStep(bender_perception_starting); //Tentative; we'll attempt this later. just a random move for now.
+            result_this_step = board_data.ApplyMove(Unit.Bender, move_this_step); //The move should be performed now, if possible.
+            obtained_reward = ReinforcementFactors.list[result_this_step]; //Get the reward for this action
+
+            episode_rewards += obtained_reward; //Update the rewards total
+
+            if (result_this_step == MoveResult.CanCollected)
+                ++cans_collected;
+
+            location_result = new int[2] { 0, 0 };
+            location_result[0] = board_data.GetUnitSquare[Unit.Bender].x;
+            location_result[1] = board_data.GetUnitSquare[Unit.Bender].y;
+
+            bender_perception_ending = board_data.units[Unit.Bender].get_perception_state();
+
+            live_qmatrix.UpdateState(bender_perception_starting, bender_perception_ending, move_this_step, obtained_reward);
+            //give the value to the q matrix to digest
+
+            if (GetStepNumber() == Qmatrix.step_limit && GetEpisodeNumber() > Qmatrix.episode_limit)
+                algorithm_ended = true;
         }
 
         //Gets the qmatrix view for the give move at bender's current position
         static public string GetQmatrixView(Move move_to_get)
         {
-            ValueSet to_get = GetCurrentQmatrix().matrix_data[GetCurrentState().board_data.units[UnitBase.Bender()].get_perception_state()];
+            ValueSet to_get = GetCurrentQmatrix().matrix_data[GetCurrentState().board_data.units[UnitBase.Bender].get_perception_state()];
             return to_get.move_list[move_to_get].ToString();
         }
 
@@ -165,7 +190,7 @@ namespace ReinforcementLearning
 
         public Percept GetBenderPercept(Move direction_to_check)
         {
-            return board_data.units[UnitBase.Bender()].get_percept(direction_to_check);
+            return board_data.units[UnitBase.Bender].get_percept(direction_to_check);
         }
 
         //Used to erase session-based progress.
@@ -186,38 +211,13 @@ namespace ReinforcementLearning
             }
             
 
-            location_result = new int[2] { board_data.units[UnitBase.Bender()].x_coordinate, board_data.units[UnitBase.Bender()].y_coordinate };
 
-            bender_perception_starting = board_data.units[UnitBase.Bender()].get_perception_state();
-            bender_perception_ending = board_data.units[UnitBase.Bender()].get_perception_state();
+            bender_perception_starting = board_data.units[Unit.Bender].get_perception_state();
+            bender_perception_ending = board_data.units[Unit.Bender].get_perception_state();
 
             live_qmatrix.ProcessNewEpisode();
         }
 
-        //At the algorithm manager, generate step is ambiguous with actually stepping through the algorithm,
-        //Or starting the algorithm, and making the first history entry at step 0.
-        //Here, a step only happens when we have been asked by the manager to *actually* take a step.
-        public void TakeStep()
-        {   
-            //Get step from qmatrix. Being randomly generated for now.
-            move_this_step = live_qmatrix.GenerateStep(bender_perception_starting); //Tentative; we'll attempt this later. just a random move for now.
-            result_this_step = board_data.ApplyMove(Unit.Bender(), move_this_step); //The move should be performed now, if possible.
-            obtained_reward = ReinforcementFactors.list[result_this_step]; //Get the reward for this action
-
-            episode_rewards += obtained_reward; //Update the rewards total
-
-            if (result_this_step == MoveResult.can_collected())
-                ++cans_collected;
-
-            location_result = new int[2] { board_data.units[UnitBase.Bender()].x_coordinate, board_data.units[UnitBase.Bender()].y_coordinate };
-            bender_perception_ending = board_data.units[UnitBase.Bender()].get_perception_state();
-
-            live_qmatrix.UpdateState(bender_perception_starting, bender_perception_ending, move_this_step, obtained_reward); 
-            //give the value to the q matrix to digest
-
-            if (GetStepNumber() == Qmatrix.step_limit && GetEpisodeNumber() > Qmatrix.episode_limit)
-                algorithm_ended = true;
-        }
 
         override public string ToString()
         {
@@ -260,5 +260,20 @@ namespace ReinforcementLearning
             return live_qmatrix.step_number;
         }
 
+        private void GenerateStatusMessage()
+        {
+            status_message = new StatusMessage(this);
+        }
+
+        public string GetStatus()
+        {
+            if(status_message == null)
+            {
+                StatusMessage status = new StatusMessage(this);
+                return status.GetMessage();
+                
+            }
+            return status_message.GetMessage();
+        }
     } 
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ReinforcementLearning
 {
@@ -11,10 +7,11 @@ namespace ReinforcementLearning
     {
         public string percept_data;
 
-        private static readonly Percept wall_percept;
-        private static readonly Percept empty_percept;
-        private static readonly Percept can_percept;
-        private static readonly Percept initialized_percept;
+        public static readonly Percept Wall;
+        public static readonly Percept Empty;
+        public static readonly Percept Can;
+        public static readonly Percept Initialized; //Just for debugging mostly
+        public static readonly Percept Enemey;
 
         private readonly static List<Percept> list; //for counting
 
@@ -22,16 +19,17 @@ namespace ReinforcementLearning
 
         static Percept()
         {
-            wall_percept = new Percept("Wall");
-            empty_percept = new Percept("Empty");
-            can_percept = new Percept("Can");
+            Wall = new Percept("Wall");
+            Empty = new Percept("Empty");
+            Can = new Percept("Can");
+            Enemey = new Percept("Enemey");
 
             list = new List<Percept>();
-            list.Add(wall_percept);
-            list.Add(empty_percept);
-            list.Add(can_percept);
-
-            initialized_percept = new Percept("initialized");
+            list.Add(Wall);
+            list.Add(Empty);
+            list.Add(Can);
+            list.Add(Enemey);
+            Initialized = new Percept("initialized");
         }
 
         public Percept()
@@ -55,27 +53,7 @@ namespace ReinforcementLearning
             return list;
         }
 
-        public static Percept wall()
-        {
-            return wall_percept;
-        }
-
-        public static Percept can()
-        {
-            return can_percept;
-        }
-
-        public static Percept empty()
-        {
-            return empty_percept;
-        }
-
-        public static Percept initialized()
-        {
-            return initialized_percept;
-        }
-
-        public static int get_list_count()
+        public static int GetListCount()
         {
             return list.Count;
         }

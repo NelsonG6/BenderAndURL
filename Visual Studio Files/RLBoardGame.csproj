@@ -129,6 +129,7 @@
     <Content Include="Properties\Images\numbers\7.png" />
     <Content Include="Properties\Images\numbers\8.png" />
     <Content Include="Properties\Images\numbers\9.png" />
+    <None Include="Properties\Images\url and beer.png" />
     <None Include="Properties\Images\URL.png" />
     <None Include="Properties\Images\futurama ship.png" />
     <None Include="Properties\Images\220px-Bender_Rodriguez.png" />

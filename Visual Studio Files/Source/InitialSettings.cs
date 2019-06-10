@@ -43,6 +43,19 @@ namespace ReinforcementLearning
             size_of_board_data = 10;
         }
 
+        //initialize all static classes here
+        static public void Initialize()
+        {
+            /*
+            Walls.Initialize();
+            Move.Initialize();
+            
+            */
+
+            Unit.Initialize();
+
+        }
+
         static public int X_Offset()
         {
             return x_offset_data;

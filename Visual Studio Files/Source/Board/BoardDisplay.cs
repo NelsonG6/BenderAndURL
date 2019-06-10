@@ -15,11 +15,11 @@ namespace ReinforcementLearning
             SquareBoardDisplay.set_backgrounds(); //This initializes a dictionary of "boardVisistedState" - background image pairs.
 
             //Initialize 10x10 grid
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < InitialSettings.SizeOfBoard(); i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < InitialSettings.SizeOfBoard(); j++)
                 {
-                    board_data[i].Add(new SquareBoardDisplay());
+                    board_data[i].Add(new SquareBoardDisplay(i, j));
                 }
             }
         }
@@ -32,12 +32,6 @@ namespace ReinforcementLearning
                 {
                     GetBoardData(i, j).CopyStatus(set_from.GetBoardData(i, j));
                 }
-            }
-
-            units = new Dictionary<UnitBase, Unit>();
-            foreach(var i in set_from.units)
-            {
-                units.Add(i.Key, i.Value);
             }
         }
 

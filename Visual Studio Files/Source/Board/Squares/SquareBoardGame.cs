@@ -7,7 +7,7 @@
         //It will determine if there is one wall, two walls, or no walls. Only a single wall object is needed.
         public Walls walls;
 
-        public SquareBoardGame() : base()
+        public SquareBoardGame(int x, int y) : base(x, y)
         {
             walls = null;
         }
@@ -22,7 +22,7 @@
         public bool CheckIfWallsPreventMove(Move move_to_check)
         {
             //Check walls
-            foreach (var i in walls.restricted_moves)
+            foreach (var i in walls.RestrictedMoves)
             {
                 if (i == move_to_check)
                     return true;

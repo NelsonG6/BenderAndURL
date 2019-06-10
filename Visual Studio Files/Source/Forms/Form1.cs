@@ -10,13 +10,17 @@ namespace ReinforcementLearning
         public Form1() //First entry point of the program
         {
             InitializeComponent();
+            InitialSettings.Initialize();
+
+            
+
             this.WindowState = FormWindowState.Maximized; //Start with the window maximized
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            AlgorithmState.SetDefaultConfiguration();
 
+            AlgorithmState.SetDefaultConfiguration();
 
             //Second entry point of the program.
             //When the form loads, we'll create some pictureboxes, that will function as the robot world grid.            
@@ -26,13 +30,13 @@ namespace ReinforcementLearning
             SquareBoardDisplay square_to_build; //This is object inherits from boardSquare, but has a picture element.
 
             //Create pictureboxes and pass them to our board
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < InitialSettings.SizeOfBoard(); i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < InitialSettings.SizeOfBoard(); j++)
                 {
                     //Fill in the column with rows
                     picturebox_in_progress = new PictureBox();
-                    square_to_build = new SquareBoardDisplay();
+                    square_to_build = new SquareBoardDisplay(i, j);
                     picturebox_in_progress.Name = i.ToString() + "-" + j.ToString(); //Each name is the coordinate
                     picturebox_in_progress.Location =
                         new Point(  InitialSettings.X_Offset() + (i * InitialSettings.EdgeLength()),
@@ -202,7 +206,7 @@ namespace ReinforcementLearning
                 comboboxWallpunishment.Text = "Invalid.";
             else
             {
-                ReinforcementFactors.list[MoveResult.move_hit_wall()] = result;
+                ReinforcementFactors.list[MoveResult.MoveFailed] = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
@@ -214,7 +218,7 @@ namespace ReinforcementLearning
                 comboboxEmptysquare.Text = "Invalid.";
             else
             {
-                ReinforcementFactors.list[MoveResult.can_missing()] = result;
+                ReinforcementFactors.list[MoveResult.CanMissing] = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
@@ -226,7 +230,7 @@ namespace ReinforcementLearning
                 comboboxBeer.Text = "Invalid.";
             else
             {
-                ReinforcementFactors.list[MoveResult.can_collected()] = result;
+                ReinforcementFactors.list[MoveResult.CanCollected] = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
@@ -243,7 +247,7 @@ namespace ReinforcementLearning
                 comboboxMovedwithoutwall.Text = "Invalid.";
             else
             {
-                ReinforcementFactors.list[MoveResult.move_successful()] = result;
+                ReinforcementFactors.list[MoveResult.MoveSuccessful] = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
@@ -311,7 +315,7 @@ namespace ReinforcementLearning
                 comboboxEmptysquare.Text = "Invalid.";
             else
             {
-                ReinforcementFactors.list[MoveResult.can_missing()] = result;
+                ReinforcementFactors.list[MoveResult.CanMissing] = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }

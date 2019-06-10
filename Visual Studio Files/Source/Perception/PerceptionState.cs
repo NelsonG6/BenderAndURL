@@ -25,41 +25,9 @@ namespace ReinforcementLearning
 
             list_of_states = new Dictionary<PerceptionState, PerceptionState>();
 
-            PerceptionState to_build;
 
-            foreach (var i in Percept.GetList())
-            {
-                foreach (var j in Percept.GetList())
-                {
-                    foreach (var k in Percept.GetList())
-                    {
-                        foreach (var l in Percept.GetList())
-                        {
-                            foreach (var m in Percept.GetList())
-                            {
-                                to_build = new PerceptionState();
-                                to_build.perception_data[Move.Left()] = i;
-                                to_build.perception_data[Move.Right()] = j;
-                                to_build.perception_data[Move.Down()] = k;
-                                to_build.perception_data[Move.Up()] = l;
-                                to_build.perception_data[Move.Grab()] = m;
-                                to_build.set_id(list_of_states.Count);
-                                to_build.set_name();
 
-                                list_of_states.Add(to_build, to_build);
-                                //list_of_states[to_build] = to_build;
-                                //Add the perception state to our dictionary at a location reachable if we can build a similar dictionary.
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        static public PerceptionState GetPerceptionFromList(PerceptionState to_find)
-        {
-            return list_of_states[to_find];
-        }
+        }        
 
         public static Dictionary<PerceptionState, PerceptionState> get_list()
         {
@@ -69,12 +37,12 @@ namespace ReinforcementLearning
 
         //Constructor called for when we are detected a state in the wild, and want to start corresponding it
         //to the static type.
-        public PerceptionState()
+        public PerceptionState(UnitBase use_movelist)
         {
             perception_data = new SortedDictionary<Move, Percept>();
-            foreach(var i in Move.GetHorizontalMovesAndGrab())
+            foreach(var i in use_movelist.unit_move_list)
             {
-                perception_data.Add(i, Percept.initialized());
+                perception_data.Add(i, Percept.Initialized);
             }
 
             set_name();

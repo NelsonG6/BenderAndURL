@@ -7,7 +7,7 @@ namespace ReinforcementLearning
     {
         public PictureBox pictureData;
 
-        public SquareBoardDisplay() : base()
+        public SquareBoardDisplay(int x, int y) : base(x, y)
         {
             pictureData = null;
         }
@@ -15,12 +15,17 @@ namespace ReinforcementLearning
         public void SetPicture()
         {
             //Set can and/or bender
-            if (beer_can_present && units_present[Unit.Bender()])
+            if (beer_can_present && UnitsPresent[Unit.Bender])
                 pictureData.Image = Properties.Resources.bender_and_beer;
+            else if (beer_can_present && UnitsPresent[Unit.Bender])
+                pictureData.Image = Properties.Resources.url_and_beer;
+            else if (UnitsPresent[Unit.Url])
+                pictureData.Image = Properties.Resources.URL;
             else if (beer_can_present)
                 pictureData.Image = Properties.Resources.beer;
-            else if (units_present[Unit.Bender()])
+            else if (UnitsPresent[Unit.Bender])
                 pictureData.Image = Properties.Resources.bender;
+            
             else
                 pictureData.Image = null;
 
@@ -31,19 +36,20 @@ namespace ReinforcementLearning
 
         public void CopyStatus(SquareBoardBase copy_from)
         {
-            beer_can_present = copy_from.beer_can_present;
-            units_present = new Dictionary<Unit, bool>();
-            foreach(var i in copy_from.units_present)
+            UnitsPresent = new Dictionary<Unit, bool>();
+            foreach(var i in copy_from.UnitsPresent)
             {
-                units_present.Add(i.Key, i.Value);
+                UnitsPresent.Add(i.Key, i.Value);
             }
 
+            beer_can_present = copy_from.beer_can_present;
             visited_state = copy_from.visited_state;
+            x = copy_from.x;
+            y = copy_from.y;
         }
 
-        public static void set_backgrounds()
+        public static void set_backgrounds() //For constructor?
         {
-
         }
     }
 }

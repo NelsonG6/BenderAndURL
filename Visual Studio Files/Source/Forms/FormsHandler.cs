@@ -62,8 +62,7 @@ namespace ReinforcementLearning
 
         static public bool lock_index_change_events;
 
-        //static public bool is_drop_down_open; //why do i need this?
-
+        //static public bool is_drop_down_open; //why do i need this?        
 
         static public bool halted;
 
@@ -88,10 +87,13 @@ namespace ReinforcementLearning
 
         static public BoardDisplay picture_board; //Stored seperately from the algorithm state because this board will store PictureSquares
 
+        //Main entry point for my source code
         static FormsHandler()
         {
             picture_board = new BoardDisplay();
             loaded_state = new AlgorithmState();
+
+            InitialSettings.Initialize();
 
             lock_index_change_events = false;
             halted = false;
@@ -165,6 +167,9 @@ namespace ReinforcementLearning
                 }
             }
 
+            
+            status_box.Text = loaded_state.GetStatus();
+
             //Handle drawing the board
             foreach (var i in picture_board.board_data)
             {
@@ -174,7 +179,7 @@ namespace ReinforcementLearning
                 }
             }
 
-            status_box.Text = StatusMessage.GetMessageFromState(loaded_state);
+            
 
             DisplayInitialSettings();
         }
@@ -188,10 +193,10 @@ namespace ReinforcementLearning
             n_initial.Text = GetString(loaded_state.live_qmatrix.n_current);
             y_initial.Text = GetString(loaded_state.live_qmatrix.y_current);
             e_initial.Text = GetString(loaded_state.live_qmatrix.e_current);
-            empty_square_punishment_textbox.Text = ReinforcementFactors.list[MoveResult.can_missing()].ToString();
-            wall_punishment_textbox.Text = ReinforcementFactors.list[MoveResult.move_hit_wall()].ToString();
-            beer_reward_textbox.Text = ReinforcementFactors.list[MoveResult.can_collected()].ToString();
-            successful_move_textbox.Text = ReinforcementFactors.list[MoveResult.move_successful()].ToString();
+            empty_square_punishment_textbox.Text = ReinforcementFactors.list[MoveResult.CanMissing].ToString();
+            wall_punishment_textbox.Text = ReinforcementFactors.list[MoveResult.MoveFailed].ToString();
+            beer_reward_textbox.Text = ReinforcementFactors.list[MoveResult.CanCollected].ToString();
+            successful_move_textbox.Text = ReinforcementFactors.list[MoveResult.MoveSuccessful].ToString();
         }
 
         //This is used to display rows of the qmatrix and the q-values for each move
@@ -366,7 +371,7 @@ namespace ReinforcementLearning
             if(changed_dropdown.SelectedText != "None.")
             {
 
-                PerceptionState to_set = new PerceptionState();
+                PerceptionState to_set = new PerceptionState(Unit.Bender);
                 Move percept_move = null;
 
                 foreach (var i in Move.HorizontalMovesAndGrab)
@@ -448,18 +453,18 @@ namespace ReinforcementLearning
             qmatrix_stored_entires = groupbox_qmatrix.Controls["textboxQmatrixentries"] as TextBox;
 
             list_qmatrix_comboboxes = new Dictionary<Move, ComboBox>();
-            list_qmatrix_comboboxes[Move.Left()] = groupbox_matrix_select.Controls["comboboxLeft"] as ComboBox;
-            list_qmatrix_comboboxes[Move.Right()] = groupbox_matrix_select.Controls["comboboxRight"] as ComboBox;
-            list_qmatrix_comboboxes[Move.Up()] = groupbox_matrix_select.Controls["comboboxUp"] as ComboBox;
-            list_qmatrix_comboboxes[Move.Down()] = groupbox_matrix_select.Controls["comboboxDown"] as ComboBox;
-            list_qmatrix_comboboxes[Move.Grab()] = groupbox_matrix_select.Controls["comboboxCurrentsquare"] as ComboBox;
+            list_qmatrix_comboboxes[Move.Left] = groupbox_matrix_select.Controls["comboboxLeft"] as ComboBox;
+            list_qmatrix_comboboxes[Move.Right] = groupbox_matrix_select.Controls["comboboxRight"] as ComboBox;
+            list_qmatrix_comboboxes[Move.Up] = groupbox_matrix_select.Controls["comboboxUp"] as ComboBox;
+            list_qmatrix_comboboxes[Move.Down] = groupbox_matrix_select.Controls["comboboxDown"] as ComboBox;
+            list_qmatrix_comboboxes[Move.Grab] = groupbox_matrix_select.Controls["comboboxCurrentsquare"] as ComboBox;
 
             List_qmatrix_value_textboxes = new Dictionary<Move, TextBox>();
-            List_qmatrix_value_textboxes[Move.Left()] = groupbox_qmatrix_values.Controls["textboxQmatrixleft"] as TextBox;
-            List_qmatrix_value_textboxes[Move.Right()] = groupbox_qmatrix_values.Controls["textboxQmatrixright"] as TextBox;
-            List_qmatrix_value_textboxes[Move.Down()] = groupbox_qmatrix_values.Controls["textboxQmatrixdown"] as TextBox;
-            List_qmatrix_value_textboxes[Move.Up()] = groupbox_qmatrix_values.Controls["textboxQmatrixup"] as TextBox;
-            List_qmatrix_value_textboxes[Move.Grab()] = groupbox_qmatrix_values.Controls["textboxQmatrixcurrent"] as TextBox;
+            List_qmatrix_value_textboxes[Move.Left] = groupbox_qmatrix_values.Controls["textboxQmatrixleft"] as TextBox;
+            List_qmatrix_value_textboxes[Move.Right] = groupbox_qmatrix_values.Controls["textboxQmatrixright"] as TextBox;
+            List_qmatrix_value_textboxes[Move.Down] = groupbox_qmatrix_values.Controls["textboxQmatrixdown"] as TextBox;
+            List_qmatrix_value_textboxes[Move.Up] = groupbox_qmatrix_values.Controls["textboxQmatrixup"] as TextBox;
+            List_qmatrix_value_textboxes[Move.Grab] = groupbox_qmatrix_values.Controls["textboxQmatrixcurrent"] as TextBox;
 
 
 
@@ -477,11 +482,11 @@ namespace ReinforcementLearning
 
             //Current position
             list_current_position_textboxes = new Dictionary<Move, TextBox>();
-            list_current_position_textboxes[Move.Left()] = groupbox_current_position.Controls["textboxLeft"] as TextBox;
-            list_current_position_textboxes[Move.Right()] = groupbox_current_position.Controls["textboxRight"] as TextBox;
-            list_current_position_textboxes[Move.Up()] = groupbox_current_position.Controls["textboxUp"] as TextBox;
-            list_current_position_textboxes[Move.Down()] = groupbox_current_position.Controls["textboxDown"] as TextBox;
-            list_current_position_textboxes[Move.Grab()] = groupbox_current_position.Controls["textboxCurrentsquare"] as TextBox;
+            list_current_position_textboxes[Move.Left] = groupbox_current_position.Controls["textboxLeft"] as TextBox;
+            list_current_position_textboxes[Move.Right] = groupbox_current_position.Controls["textboxRight"] as TextBox;
+            list_current_position_textboxes[Move.Up] = groupbox_current_position.Controls["textboxUp"] as TextBox;
+            list_current_position_textboxes[Move.Down] = groupbox_current_position.Controls["textboxDown"] as TextBox;
+            list_current_position_textboxes[Move.Grab] = groupbox_current_position.Controls["textboxCurrentsquare"] as TextBox;
 
             //Add all these textboxes to a list
             list_session_progress = new List<TextBox>();

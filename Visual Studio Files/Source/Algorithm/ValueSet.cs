@@ -15,7 +15,7 @@ namespace ReinforcementLearning
             move_list = new Dictionary<Move, double>();
 
             //Build a dictionary with 5 moves, by default
-            foreach(var i in Move.GetHorizontalMovesAndGrab())
+            foreach(var i in Move.HorizontalMovesAndGrab)
             {
                 move_list.Add(i, 0f);
             }
