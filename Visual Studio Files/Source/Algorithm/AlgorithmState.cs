@@ -88,6 +88,7 @@ namespace ReinforcementLearning
             //After the copy consctructor above, the state will have the correct episode number.
             //We may need to add a new episode.
 
+
             if (step_with.GetEpisodeNumber() > state_history.Count)
             {
                 state_history.Add(new AlgorithmEpisode(state_history.Count + 1)); //Add the first empty episode
@@ -257,10 +258,15 @@ namespace ReinforcementLearning
 
             //Detect if we reached the limit for this episode
 
+
             if (live_qmatrix.step_number == Qmatrix.step_limit || board_data.BenderAttacked())
-                StartNewEpisode();
-            else
-                live_qmatrix.step_number++;
+                if (live_qmatrix.episode_number == Qmatrix.episode_limit)
+                    algorithm_ended = true;
+                else
+                {
+                    StartNewEpisode();
+                    live_qmatrix.step_number++;
+                }
         }
 
         public Percept GetBenderPercept(Move direction_to_check)

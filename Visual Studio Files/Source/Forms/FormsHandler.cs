@@ -188,9 +188,13 @@ namespace ReinforcementLearning
                 }
             }
 
-            
-
             DisplayInitialSettings();
+
+            //If the algorithm is ended, disable the stepping groupbox.
+            if(AlgorithmState.algorithm_ended == true)
+            {
+                groupbox_control_progress.Enabled = false;
+            }
         }
 
         static public void DisplayInitialSettings()
