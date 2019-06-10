@@ -46,8 +46,8 @@ namespace ReinforcementLearning
             n_current = InitialSettings.n(); //The learning rate
             y = InitialSettings.y();
 
-            step_limit = InitialSettings.step_limit();  //limits
-            episode_limit = InitialSettings.episode_limit();
+            step_limit = InitialSettings.StepLimit();  //limits
+            episode_limit = InitialSettings.EpisodeLimit();
 
         }
 
@@ -55,8 +55,8 @@ namespace ReinforcementLearning
         {
             //Default limit
             e_initial = InitialSettings.e();
-            episode_limit = InitialSettings.episode_limit();
-            step_limit = InitialSettings.step_limit();
+            episode_limit = InitialSettings.EpisodeLimit();
+            step_limit = InitialSettings.StepLimit();
         }
         
         public Qmatrix(Qmatrix copy_from)
@@ -92,7 +92,7 @@ namespace ReinforcementLearning
                 {
                     randomly_moved = true;
                     //Random move. 
-                    return Move.list[MyRandom.Next(0, 5)];
+                    return Move.HorizontalMovesAndGrab[MyRandom.Next(0, 5)];
                 }
                 else
                 {
@@ -117,7 +117,7 @@ namespace ReinforcementLearning
             }
 
             //No q-matrix entry, so just do a random move. 
-            return Move.list[MyRandom.Next(0, Move.list.Count)];
+            return Move.HorizontalMovesAndGrab[MyRandom.Next(0, Move.HorizontalMovesAndGrab.Count)];
         }
 
         //When this is called, the q matrix will update a previous state with the value of the next state

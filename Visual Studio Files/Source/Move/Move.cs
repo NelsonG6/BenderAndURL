@@ -10,7 +10,7 @@ namespace ReinforcementLearning
     //4 movements with grab false
     //one no-movement with grab true
 
-    class Move : IComparable<Move>
+    class Move : IComparable<Move>, IEqualityComparer<Move>
     {   //This class defines the moves bender can make.
         public int[] grid_adjustment; //The motion bender makes from this movement
 
@@ -19,8 +19,14 @@ namespace ReinforcementLearning
         readonly static Move up_move;
         readonly static Move down_move;
         readonly static Move grab_move;
+        readonly static Move up_left_move;
+        readonly static Move up_right_move;
+        readonly static Move down_left_move;
+        readonly static Move down_right_move;
 
-        public readonly static List<Move> list;
+        public readonly static List<Move> HorizontalMovesAndGrab;
+
+        public readonly static List<Move> AllMoves;
 
         public bool to_grab; //determines if we grab the can. This is done after the move step.
         //public string name_of_move; //The description of the move, which is used to translate this move into actions when the result isn't movement-based.'
@@ -35,13 +41,15 @@ namespace ReinforcementLearning
         {
             //These should be the only instances of moves created in the program
             //Q moves will be generated frequently, however
+            int move_order = 0;
+
             left_move = new Move();
             left_move.grid_adjustment[0] = -1;
             left_move.grid_adjustment[1] = 0;
             left_move.to_grab = false;
             left_move.short_name = "L";
             left_move.long_name = "Left";
-            left_move.order = 1;
+            left_move.order = ++move_order;
 
             right_move = new Move();
             right_move.grid_adjustment[0] = 1;
@@ -49,7 +57,7 @@ namespace ReinforcementLearning
             right_move.to_grab = false;
             right_move.short_name = "R";
             right_move.long_name = "Right";
-            right_move.order = 2;
+            right_move.order = ++move_order;
 
             down_move = new Move();
             down_move.grid_adjustment[0] = 0;
@@ -57,7 +65,7 @@ namespace ReinforcementLearning
             down_move.to_grab = false;
             down_move.short_name = "D";
             down_move.long_name = "Down";
-            down_move.order = 3;
+            down_move.order = ++move_order;
 
             up_move = new Move();
             up_move.grid_adjustment[0] = 0;
@@ -65,7 +73,7 @@ namespace ReinforcementLearning
             up_move.to_grab = false;
             up_move.short_name = "Up";
             up_move.long_name = "Up";
-            up_move.order = 4;
+            up_move.order = ++move_order;
 
             grab_move = new Move();
             grab_move.grid_adjustment[0] = 0;
@@ -73,47 +81,106 @@ namespace ReinforcementLearning
             grab_move.to_grab = true;
             grab_move.short_name = "Gr";
             grab_move.long_name = "Grab";
-            grab_move.order = 5;
+            grab_move.order = ++move_order;
 
-            list = new List<Move>();
+            up_left_move = new Move();
+            up_left_move.grid_adjustment[0] = -1;
+            up_left_move.grid_adjustment[1] = 1;
+            up_left_move.to_grab = false;
+            up_left_move.short_name = "UL";
+            up_left_move.long_name = "Up-Left";
+            up_left_move.order = ++move_order;
 
-            list.Add(left_move);
-            list.Add(right_move);
-            list.Add(up_move);
-            list.Add(down_move);
-            list.Add(grab_move);
+            up_right_move = new Move();
+            up_right_move.grid_adjustment[0] = 1;
+            up_right_move.grid_adjustment[1] = 1;
+            up_right_move.to_grab = true;
+            up_right_move.short_name = "UR";
+            up_right_move.long_name = "Up-Right";
+            up_right_move.order = ++move_order;
+
+            down_left_move = new Move();
+            down_left_move.grid_adjustment[0] = -1;
+            down_left_move.grid_adjustment[1] = -1;
+            down_left_move.to_grab = true;
+            down_left_move.short_name = "DL";
+            down_left_move.long_name = "Down-Left";
+            down_left_move.order = ++move_order;
+
+            down_right_move = new Move();
+            down_right_move.grid_adjustment[0] = 1;
+            down_right_move.grid_adjustment[1] = -1;
+            down_right_move.to_grab = true;
+            down_right_move.short_name = "DR";
+            down_right_move.long_name = "Down-Right";
+            down_right_move.order = ++move_order;
+
+            HorizontalMovesAndGrab = new List<Move>();
+
+            HorizontalMovesAndGrab.Add(left_move);
+            HorizontalMovesAndGrab.Add(right_move);
+            HorizontalMovesAndGrab.Add(up_move);
+            HorizontalMovesAndGrab.Add(down_move);
+            HorizontalMovesAndGrab.Add(grab_move);
+
+            AllMoves = new List<Move>();
+            AllMoves.AddRange(HorizontalMovesAndGrab.ToArray());
+            AllMoves.Add(up_left_move);
+            AllMoves.Add(up_right_move);
+            AllMoves.Add(down_left_move);
+            AllMoves.Add(down_right_move);
+
         }
 
-        public static Move left()
+        public static Move UpLeft()
+        {
+            return up_left_move;
+        }
+
+        public static Move UpRight()
+        {
+            return up_right_move;
+        }
+
+        public static Move DownLeft()
+        {
+            return down_left_move;
+        }
+
+        public static Move DownRight()
+        {
+            return down_right_move;
+        }
+
+        public static Move Left()
         {
             return left_move;
         }
 
-        public static Move right()
+        public static Move Right()
         {
             return right_move;
         }
 
-        public static Move up()
+        public static Move Up()
         {
             return up_move;
         }
 
-        public static Move down()
+        public static Move Down()
         {
             return down_move;
         }
 
-        public static Move grab()
+        public static Move Grab()
         {
             return grab_move;
         }
 
-        public static List<Move> get_moves()
+        public static List<Move> GetHorizontalMovesAndGrab()
         {
-            return list;
+            return HorizontalMovesAndGrab;
         }
-
 
         //might not need this constructor
         public Move()
@@ -133,12 +200,24 @@ namespace ReinforcementLearning
 
         public int CompareTo(Move compare_from)
         {
-            return this.long_name.CompareTo(compare_from.long_name);
+            return long_name.CompareTo(compare_from.long_name);
         }
 
         override public string ToString()
         {
             return long_name;
+        }
+
+        public bool Equals(Move first, Move second)
+        {
+            if (first.GetHashCode() == second.GetHashCode())
+                return true;
+            return false;
+        }
+
+        public int GetHashCode(Move check)
+        {
+            return check.long_name.GetHashCode();
         }
     }
 }

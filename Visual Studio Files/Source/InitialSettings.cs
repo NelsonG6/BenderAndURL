@@ -20,6 +20,7 @@ namespace ReinforcementLearning
         private static readonly int y_offset_data;
         private static readonly int edge_length_data;
         private static readonly int rounding_digit_data;
+        private static readonly int size_of_board_data;
 
         static InitialSettings()
         {
@@ -38,24 +39,26 @@ namespace ReinforcementLearning
             y_offset_data = 55;
             edge_length_data = 75;
             rounding_digit_data = 5;
+
+            size_of_board_data = 10;
         }
 
-        static public int x_offset()
+        static public int X_Offset()
         {
             return x_offset_data;
         }
 
-        static public int y_offset()
+        static public int Y_Offset()
         {
             return y_offset_data;
         }
 
-        static public int edge_length()
+        static public int EdgeLength()
         {
             return edge_length_data;
         }
 
-        static public double ms_delay()
+        static public double MS_Delay()
         {
             return ms_delay_data;
         }
@@ -75,19 +78,24 @@ namespace ReinforcementLearning
             return e_data;
         }
 
-        static public int episode_limit()
+        static public int EpisodeLimit()
         {
             return episode_limit_data;
         }
 
-        static public int step_limit()
+        static public int StepLimit()
         {
             return step_limit_data;
         }
 
-        static public int rounding_digits()
+        static public int RoundingDigits()
         {
             return rounding_digit_data;
+        }
+
+        static public int SizeOfBoard()
+        {
+            return size_of_board_data;
         }
     }
 

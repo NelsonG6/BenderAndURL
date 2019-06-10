@@ -50,7 +50,7 @@ namespace ReinforcementLearning
             return percept_data;
         }
 
-        public static List<Percept> get_list()
+        public static List<Percept> GetList()
         {
             return list;
         }

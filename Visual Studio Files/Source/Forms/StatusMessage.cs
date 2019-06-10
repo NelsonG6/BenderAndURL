@@ -20,7 +20,8 @@
             {
                 program_launch_message = true;
                 complete_message = "The program has been launched.\nBender's starting position is (";
-                complete_message += (set_from.board_data.bender.x_coordinate + 1).ToString() + ", " + (set_from.board_data.bender.y_coordinate + 1).ToString() + ").";
+                complete_message += (set_from.board_data.units[UnitBase.Bender()].x_coordinate + 1).ToString();
+                complete_message += ", " + (set_from.board_data.units[UnitBase.Bender()].y_coordinate + 1).ToString() + ").";
             }
             else if (!AlgorithmState.algorithm_started)
 
@@ -32,8 +33,8 @@
                 complete_message = "A new episode has been created.\n";
                 complete_message += "Starting turn [Episode: " + set_from.GetEpisodeNumber().ToString();
                 complete_message += ", Step: " + set_from.GetStepNumber().ToString() + "]";
-                complete_message += " at position (" + (set_from.board_data.bender.x_coordinate + 1).ToString();
-                complete_message += ", " + (set_from.board_data.bender.y_coordinate + 1).ToString() + ").";
+                complete_message += " at position (" + (set_from.board_data.units[UnitBase.Bender()].x_coordinate + 1).ToString();
+                complete_message += ", " + (set_from.board_data.units[UnitBase.Bender()].y_coordinate + 1).ToString() + ").";
                 complete_message += System.Environment.NewLine + "Bender's initial perception is:";
                 complete_message += System.Environment.NewLine + set_from.bender_perception_ending.ToString() + ".";
             }
@@ -54,7 +55,7 @@
                 else
                     move_being_applied_data += "The move was greedily chosen." + System.Environment.NewLine;
 
-                if (set_from.move_this_step == Move.grab())
+                if (set_from.move_this_step == Move.Grab())
                     move_being_applied_data += "A [Grab] was attempted.";
                 else
                     move_being_applied_data += "A [" + set_from.move_this_step.long_name + "] was attempted.";

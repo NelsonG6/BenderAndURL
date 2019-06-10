@@ -23,7 +23,7 @@ namespace ReinforcementLearning
 
 
             PictureBox picturebox_in_progress; //Temporary picturebox
-            PictureSquare square_to_build; //This is object inherits from boardSquare, but has a picture element.
+            SquareBoardDisplay square_to_build; //This is object inherits from boardSquare, but has a picture element.
 
             //Create pictureboxes and pass them to our board
             for (int i = 0; i < 10; i++)
@@ -32,12 +32,12 @@ namespace ReinforcementLearning
                 {
                     //Fill in the column with rows
                     picturebox_in_progress = new PictureBox();
-                    square_to_build = new PictureSquare();
+                    square_to_build = new SquareBoardDisplay();
                     picturebox_in_progress.Name = i.ToString() + "-" + j.ToString(); //Each name is the coordinate
                     picturebox_in_progress.Location =
-                        new Point(  InitialSettings.x_offset() + (i * InitialSettings.edge_length()),
-                                    InitialSettings.y_offset() + (j * InitialSettings.edge_length()));
-                    picturebox_in_progress.Size = new Size(InitialSettings.edge_length(), InitialSettings.edge_length());
+                        new Point(  InitialSettings.X_Offset() + (i * InitialSettings.EdgeLength()),
+                                    InitialSettings.Y_Offset() + (j * InitialSettings.EdgeLength()));
+                    picturebox_in_progress.Size = new Size(InitialSettings.EdgeLength(), InitialSettings.EdgeLength());
                     picturebox_in_progress.SizeMode = PictureBoxSizeMode.StretchImage;
                     picturebox_in_progress.BackgroundImageLayout = ImageLayout.Stretch;
                     Controls.Add(picturebox_in_progress);
@@ -400,7 +400,7 @@ namespace ReinforcementLearning
         {
             bool success = Int32.TryParse(comboboxDelayms.Text, out int result);
             if (!success || result < 0)
-                comboboxDelayms.Text = InitialSettings.ms_delay().ToString();
+                comboboxDelayms.Text = InitialSettings.MS_Delay().ToString();
             else
                 comboboxDelayms.Text = result.ToString();
         }
@@ -478,8 +478,8 @@ namespace ReinforcementLearning
             if (e.KeyChar == 13)
             {
                 bool success = Int32.TryParse(comboboxDelayms.Text, out int result);
-                if (!success || result < InitialSettings.ms_delay())
-                    comboboxDelayms.Text = InitialSettings.ms_delay().ToString();
+                if (!success || result < InitialSettings.MS_Delay())
+                    comboboxDelayms.Text = InitialSettings.MS_Delay().ToString();
                 else
                     comboboxDelayms.Text = result.ToString();
 

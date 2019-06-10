@@ -27,22 +27,22 @@ namespace ReinforcementLearning
 
             PerceptionState to_build;
 
-            foreach (var i in Percept.get_list())
+            foreach (var i in Percept.GetList())
             {
-                foreach (var j in Percept.get_list())
+                foreach (var j in Percept.GetList())
                 {
-                    foreach (var k in Percept.get_list())
+                    foreach (var k in Percept.GetList())
                     {
-                        foreach (var l in Percept.get_list())
+                        foreach (var l in Percept.GetList())
                         {
-                            foreach (var m in Percept.get_list())
+                            foreach (var m in Percept.GetList())
                             {
                                 to_build = new PerceptionState();
-                                to_build.perception_data[Move.left()] = i;
-                                to_build.perception_data[Move.right()] = j;
-                                to_build.perception_data[Move.down()] = k;
-                                to_build.perception_data[Move.up()] = l;
-                                to_build.perception_data[Move.grab()] = m;
+                                to_build.perception_data[Move.Left()] = i;
+                                to_build.perception_data[Move.Right()] = j;
+                                to_build.perception_data[Move.Down()] = k;
+                                to_build.perception_data[Move.Up()] = l;
+                                to_build.perception_data[Move.Grab()] = m;
                                 to_build.set_id(list_of_states.Count);
                                 to_build.set_name();
 
@@ -66,10 +66,13 @@ namespace ReinforcementLearning
             return list_of_states;
         }
 
+
+        //Constructor called for when we are detected a state in the wild, and want to start corresponding it
+        //to the static type.
         public PerceptionState()
         {
             perception_data = new SortedDictionary<Move, Percept>();
-            foreach(var i in Move.get_moves())
+            foreach(var i in Move.GetHorizontalMovesAndGrab())
             {
                 perception_data.Add(i, Percept.initialized());
             }
@@ -145,7 +148,7 @@ namespace ReinforcementLearning
         public int compare(PerceptionState compare_to)
         {
             int compare_total = 0;
-            foreach (var i in Move.list)
+            foreach (var i in Move.HorizontalMovesAndGrab)
             {
                 if (perception_data[i] == compare_to.perception_data[i])
                     compare_total++;

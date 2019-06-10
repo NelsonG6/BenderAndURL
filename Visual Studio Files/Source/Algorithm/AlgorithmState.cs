@@ -20,7 +20,7 @@ namespace ReinforcementLearning
 
 
         //Non-static members
-        public GameBoard board_data; //Stores the state of the cans and walls (bender is stored with other coordinates)
+        public BoardGame board_data; //Stores the state of the cans and walls (bender is stored with other coordinates)
 
         public Qmatrix live_qmatrix; //Moves will be generated from here.
 
@@ -98,7 +98,7 @@ namespace ReinforcementLearning
         //Gets the qmatrix view for the give move at bender's current position
         static public string GetQmatrixView(Move move_to_get)
         {
-            ValueSet to_get = GetCurrentQmatrix().matrix_data[GetCurrentState().board_data.bender.get_perception_state()];
+            ValueSet to_get = GetCurrentQmatrix().matrix_data[GetCurrentState().board_data.units[UnitBase.Bender()].get_perception_state()];
             return to_get.move_list[move_to_get].ToString();
         }
 
@@ -116,7 +116,7 @@ namespace ReinforcementLearning
         //This is called when the program is launched.
         public AlgorithmState()
         {
-            board_data = new GameBoard(); //Produces a shuffled bender and can-filled board 
+            board_data = new BoardGame(); //Produces a shuffled bender and can-filled board 
 
             InitializeValues(); //Gives us some empty defaults
 
@@ -145,7 +145,7 @@ namespace ReinforcementLearning
             episode_rewards = set_from.episode_rewards; //Reward data
             total_rewards = set_from.total_rewards;
 
-            board_data = new GameBoard(set_from.board_data); //Copy the board
+            board_data = new BoardGame(set_from.board_data); //Copy the board
 
             //Increase steps in here
             live_qmatrix = new Qmatrix(set_from.live_qmatrix); //Copy the q matrix
@@ -165,7 +165,7 @@ namespace ReinforcementLearning
 
         public Percept GetBenderPercept(Move direction_to_check)
         {
-            return board_data.bender.get_percept(direction_to_check);
+            return board_data.units[UnitBase.Bender()].get_percept(direction_to_check);
         }
 
         //Used to erase session-based progress.
@@ -178,14 +178,18 @@ namespace ReinforcementLearning
             cans_collected = 0;
             episode_rewards = 0; //Session - Reward data
 
-            board_data.shuffle_cans_and_bender(); //Shuffle the the current board.
+            board_data.ShuffleCansAndUnits(); //Shuffle the the current board.
 
-            board_data.bender_percieves();
+            foreach(var i in board_data.units.Keys)
+            {
+                board_data.UnitPercieves(i);
+            }
+            
 
-            location_result = new int[2] { board_data.bender.x_coordinate, board_data.bender.y_coordinate };
+            location_result = new int[2] { board_data.units[UnitBase.Bender()].x_coordinate, board_data.units[UnitBase.Bender()].y_coordinate };
 
-            bender_perception_starting = board_data.bender.get_perception_state();
-            bender_perception_ending = board_data.bender.get_perception_state();
+            bender_perception_starting = board_data.units[UnitBase.Bender()].get_perception_state();
+            bender_perception_ending = board_data.units[UnitBase.Bender()].get_perception_state();
 
             live_qmatrix.ProcessNewEpisode();
         }
@@ -197,7 +201,7 @@ namespace ReinforcementLearning
         {   
             //Get step from qmatrix. Being randomly generated for now.
             move_this_step = live_qmatrix.GenerateStep(bender_perception_starting); //Tentative; we'll attempt this later. just a random move for now.
-            result_this_step = board_data.ApplyMove(move_this_step); //The move should be performed now, if possible.
+            result_this_step = board_data.ApplyMove(Unit.Bender(), move_this_step); //The move should be performed now, if possible.
             obtained_reward = ReinforcementFactors.list[result_this_step]; //Get the reward for this action
 
             episode_rewards += obtained_reward; //Update the rewards total
@@ -205,8 +209,8 @@ namespace ReinforcementLearning
             if (result_this_step == MoveResult.can_collected())
                 ++cans_collected;
 
-            location_result = new int[2] { board_data.bender.x_coordinate, board_data.bender.y_coordinate };
-            bender_perception_ending = board_data.bender.get_perception_state();
+            location_result = new int[2] { board_data.units[UnitBase.Bender()].x_coordinate, board_data.units[UnitBase.Bender()].y_coordinate };
+            bender_perception_ending = board_data.units[UnitBase.Bender()].get_perception_state();
 
             live_qmatrix.UpdateState(bender_perception_starting, bender_perception_ending, move_this_step, obtained_reward); 
             //give the value to the q matrix to digest
@@ -225,7 +229,7 @@ namespace ReinforcementLearning
             return GetCurrentState().live_qmatrix;
         }
 
-        public static GameBoard GetCurrentBoard()
+        public static BoardGame GetCurrentBoard()
         {
             return GetCurrentState().board_data;
         }

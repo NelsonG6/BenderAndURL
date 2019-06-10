@@ -55,13 +55,14 @@
     <Compile Include="Source\Algorithm\AlgorithmState.cs" />
     <Compile Include="Source\Algorithm\ReinforcementFactors.cs" />
     <Compile Include="Source\Algorithm\ValueSet.cs" />
-    <Compile Include="Source\Board\Squares\Backgrounds.cs" />
-    <Compile Include="Source\Board\PictureBoard.cs" />
-    <Compile Include="Source\Board\GameBoard.cs" />
-    <Compile Include="Source\Board\BaseBoard.cs" />
-    <Compile Include="Source\Board\Squares\BoardSquare.cs" />
-    <Compile Include="Source\Board\Squares\BaseSquare.cs" />
-    <Compile Include="Source\Board\Squares\BoardSquareWalls.cs" />
+    <Compile Include="Source\Board\UnitBase.cs" />
+    <Compile Include="Source\Forms\Backgrounds.cs" />
+    <Compile Include="Source\Board\BoardDisplay.cs" />
+    <Compile Include="Source\Board\BoardGame.cs" />
+    <Compile Include="Source\Board\BoardBase.cs" />
+    <Compile Include="Source\Board\Squares\SquareBoardGame.cs" />
+    <Compile Include="Source\Board\Squares\SquareBoardBase.cs" />
+    <Compile Include="Source\Board\Squares\Walls.cs" />
     <Compile Include="Source\Board\Squares\SquareVisitedState.cs" />
     <Compile Include="Source\Forms\Form1.cs">
       <SubType>Form</SubType>
@@ -76,7 +77,7 @@
     <Compile Include="Source\Move\MoveResult.cs" />
     <Compile Include="Source\MyRandom.cs" />
     <Compile Include="Source\Perception\Percept.cs" />
-    <Compile Include="Source\Board\Squares\PictureSquare.cs" />
+    <Compile Include="Source\Board\Squares\SquareBoardDisplay.cs" />
     <Compile Include="Source\Algorithm\Qmatrix.cs" />
     <Compile Include="Source\Forms\FormsHandler.cs" />
     <Compile Include="Source\Perception\PerceptionState.cs" />
@@ -128,12 +129,11 @@
     <Content Include="Properties\Images\numbers\7.png" />
     <Content Include="Properties\Images\numbers\8.png" />
     <Content Include="Properties\Images\numbers\9.png" />
+    <None Include="Properties\Images\URL.png" />
     <None Include="Properties\Images\futurama ship.png" />
     <None Include="Properties\Images\220px-Bender_Rodriguez.png" />
     <None Include="Properties\Images\numbers\10.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,27 +1,25 @@
 ﻿using System.Windows.Forms;
-using System.Linq;
-using System;
 using System.Collections.Generic;
 
 namespace ReinforcementLearning
 {
-    class PictureSquare : BaseSquare
+    class SquareBoardDisplay : SquareBoardBase
     {
         public PictureBox pictureData;
 
-        public PictureSquare() : base()
+        public SquareBoardDisplay() : base()
         {
             pictureData = null;
         }
 
-        public void setPicture()
+        public void SetPicture()
         {
             //Set can and/or bender
-            if (beer_can_present && bender_present)
+            if (beer_can_present && units_present[Unit.Bender()])
                 pictureData.Image = Properties.Resources.bender_and_beer;
             else if (beer_can_present)
                 pictureData.Image = Properties.Resources.beer;
-            else if (bender_present)
+            else if (units_present[Unit.Bender()])
                 pictureData.Image = Properties.Resources.bender;
             else
                 pictureData.Image = null;
@@ -31,10 +29,15 @@ namespace ReinforcementLearning
         }
 
 
-        new public void copy_status(BaseSquare copy_from)
+        public void CopyStatus(SquareBoardBase copy_from)
         {
             beer_can_present = copy_from.beer_can_present;
-            bender_present = copy_from.bender_present;
+            units_present = new Dictionary<Unit, bool>();
+            foreach(var i in copy_from.units_present)
+            {
+                units_present.Add(i.Key, i.Value);
+            }
+
             visited_state = copy_from.visited_state;
         }
 
