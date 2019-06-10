@@ -107,7 +107,7 @@ namespace ReinforcementLearning
                 groupboxHistory.Enabled = false;
                 while (steps_to_take-- > 0 && !FormsHandler.halted)
                 {
-                    AlgorithmState.PrepareStep();
+                    AlgorithmState.StepPrepare();
                     FormsHandler.LoadAndDisplayState(AlgorithmState.GetCurrentState());
                     textboxProgresssteps.Text = steps_to_take.ToString();
                     do
@@ -124,7 +124,7 @@ namespace ReinforcementLearning
 
             else
             {
-                AlgorithmState.PrepareStep();
+                AlgorithmState.StepPrepare();
                 FormsHandler.LoadAndDisplayState(AlgorithmState.GetCurrentState());
             }
             
@@ -354,8 +354,7 @@ namespace ReinforcementLearning
 
         private void combobox_clicked_clear_text(object sender, EventArgs e)
         {
-            if(((ComboBox)sender).DroppedDown == false)
-                ((ComboBox)sender).Text = "";
+
         }
 
         private void dropdown_opened(object sender, EventArgs e)

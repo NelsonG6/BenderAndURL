@@ -113,7 +113,8 @@
                 if (set_from.live_qmatrix.did_we_update)
                     qmatrix_adjustment_data = "A q-matrix entry was made for this perception.";
 
-                url_data = "Url made a move of " + set_from.moves_this_step[UnitType.Url].long_name + ".";
+                if(set_from.moves_this_step.Keys.Count != 0)
+                    url_data = "Url made a move of " + set_from.moves_this_step[UnitType.Url].long_name + ".";
 
                 //ending data
                 if(set_from.bender_attacked)

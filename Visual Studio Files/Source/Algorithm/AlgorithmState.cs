@@ -78,22 +78,25 @@ namespace ReinforcementLearning
         }
 
         //Manages the state history, and making sure the correct state is being created/stored
-        public static void PrepareStep() //Go to the most current state, and step forward once. 
+        public static void StepPrepare() //Go to the most current state, and step forward once. 
         {   //If the algorithm hasn't started, this will just start the algorithm and leave us at step 0.
 
             //use start new episode if this is the first step
             //step and add, or dont step and dont add
             AlgorithmState step_with = new AlgorithmState(GetCurrentState());
 
-            if(step_with.GetEpisodeNumber() > state_history.Count)
+            //After the copy consctructor above, the state will have the correct episode number.
+            //We may need to add a new episode.
+
+            if (step_with.GetEpisodeNumber() > state_history.Count)
             {
                 state_history.Add(new AlgorithmEpisode(state_history.Count + 1)); //Add the first empty episode
             }
-            else if (step_with.GetStepNumber() == Qmatrix.step_limit)
+            else
             {
-                state_history.Add(new AlgorithmEpisode(state_history.Count + 1)); //Add the first empty episode
-                step_with.TakeStep();
 
+
+                step_with.Step();
             }
 
             state_history.Last().Add(step_with); //Add the state to the history list, after everything possible has been done to it.    
@@ -107,7 +110,7 @@ namespace ReinforcementLearning
         //At the algorithm manager level, "generate step" is ambiguous with actually stepping through the algorithm,
         //Or starting the algorithm, and making the first history entry at step 0.
         //Here, a step only happens when we have been asked by the manager to *actually* take a step.
-        public void TakeStep()
+        public void Step()
         {
             board_data.UnitPercieves(UnitType.Bender);
             //Url senses twice. If bender moves into him, he wont start chasing until next turn.
@@ -184,6 +187,7 @@ namespace ReinforcementLearning
             {   //Url attacks bender. don't move him just so its visually easier to see.
                 obtained_reward = MoveResult.list[MoveResult.EnemeyEncountered];
                 bender_attacked = true;
+                result_this_step = MoveResult.EnemeyEncountered;
             }
 
             live_qmatrix.UpdateState(bender_perception_starting, bender_perception_ending, moves_this_step[UnitType.Bender], obtained_reward);
@@ -243,7 +247,7 @@ namespace ReinforcementLearning
 
             //Increase steps in here
             live_qmatrix = new Qmatrix(set_from.live_qmatrix); //Copy the q matrix
-
+            
             //The initial location will be the resulting location of the last step
             location_initial = board_data.GetUnitSquare[UnitType.Bender];
 

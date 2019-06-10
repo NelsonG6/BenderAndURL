@@ -719,10 +719,7 @@ namespace ReinforcementLearning
             this.comboboxHistoryepisode.Size = new System.Drawing.Size(211, 24);
             this.comboboxHistoryepisode.TabIndex = 22;
             this.comboboxHistoryepisode.Text = "View prior episodes...";
-            this.comboboxHistoryepisode.DropDown += new System.EventHandler(this.dropdown_opened);
             this.comboboxHistoryepisode.SelectionChangeCommitted += new System.EventHandler(this.history_index_changed);
-            this.comboboxHistoryepisode.DropDownClosed += new System.EventHandler(this.dropdown_closed);
-            this.comboboxHistoryepisode.Click += new System.EventHandler(this.combobox_clicked_clear_text);
             this.comboboxHistoryepisode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboboxHistoryepisode_KeyPress);
             // 
             // groupboxHistory
