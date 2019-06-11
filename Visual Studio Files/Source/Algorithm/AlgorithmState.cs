@@ -186,9 +186,9 @@ namespace ReinforcementLearning
             //See if the move url selected perceives an enemy to do this
             if(best_move != Move.Wait && board_data.units[UnitType.Url].perception_data.perception_data[best_move] == Percept.Enemy)
             {   //Url attacks bender. don't move him just so its visually easier to see.
-                obtained_reward = MoveResult.list[MoveResult.enemyEncountered];
+                obtained_reward = MoveResult.list[MoveResult.EnemyEncountered];
                 bender_attacked = true;
-                result_this_step = MoveResult.enemyEncountered;
+                result_this_step = MoveResult.EnemyEncountered;
             }
 
             live_qmatrix.UpdateState(bender_perception_starting, bender_perception_ending, moves_this_step[UnitType.Bender], obtained_reward);
