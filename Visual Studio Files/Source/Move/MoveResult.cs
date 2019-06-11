@@ -11,7 +11,7 @@ namespace ReinforcementLearning
         public static readonly MoveResult CanCollected;
         public static readonly MoveResult TravelSucceeded;
         public static readonly MoveResult TravelFailed;
-        public static readonly MoveResult EnemeyEncountered;        
+        public static readonly MoveResult EnemyEncountered;        
 
         private static MoveResult initialized_result;
 
@@ -30,14 +30,14 @@ namespace ReinforcementLearning
             CanCollected = new MoveResult("Can collected");
             TravelSucceeded = new MoveResult("Move successful");
             TravelFailed = new MoveResult("Move failed");
-            EnemeyEncountered = new MoveResult("Enemey encountered");
+            EnemyEncountered = new MoveResult("Enemey encountered");
             initialized_result = new MoveResult("Initialized");
 
             list.Add(CanMissing, InitialSettings.CanMissingReward);
             list.Add(CanCollected, InitialSettings.CanGrabbedReward);
             list.Add(TravelSucceeded, InitialSettings.MoveSuccessfulReward);
             list.Add(TravelFailed, InitialSettings.MoveFailedReward);
-            list.Add(EnemeyEncountered, InitialSettings.EnemyEncountered);
+            list.Add(EnemyEncountered, InitialSettings.EnemyEncountered);
 
         }
     }
