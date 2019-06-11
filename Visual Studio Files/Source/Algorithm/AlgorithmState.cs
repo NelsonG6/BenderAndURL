@@ -265,8 +265,10 @@ namespace ReinforcementLearning
                 else
                 {
                     StartNewEpisode();
-                    live_qmatrix.step_number++;
                 }
+            else
+                live_qmatrix.step_number++;
+
         }
 
         public Percept GetBenderPercept(Move direction_to_check)
