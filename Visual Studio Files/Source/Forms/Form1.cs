@@ -162,7 +162,7 @@ namespace ReinforcementLearning
                 comboboxN.Text = "Invalid.";
             else
             {
-                FormsHandler.loaded_state.live_qmatrix.n_current = result;
+                FormsHandler.loaded_state.liveQmatrix.n_current = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
@@ -174,7 +174,7 @@ namespace ReinforcementLearning
                 comboboxY.Text = "Invalid.";
             else
             {
-                FormsHandler.loaded_state.live_qmatrix.y_current = result;
+                FormsHandler.loaded_state.liveQmatrix.y_current = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
@@ -191,7 +191,7 @@ namespace ReinforcementLearning
                 comboboxE.Text = "Invalid.";
             else
             {
-                FormsHandler.loaded_state.live_qmatrix.e_current = result;
+                FormsHandler.loaded_state.liveQmatrix.e_current = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
@@ -420,7 +420,7 @@ namespace ReinforcementLearning
                 comboboxHistorystep.Items.Clear();
 
                 AlgorithmEpisode to_display = (AlgorithmEpisode)sender_box.SelectedItem;
-                comboboxHistorystep.Items.AddRange(to_display.state_history_data.ToArray());
+                comboboxHistorystep.Items.AddRange(to_display.stateHistoryData.ToArray());
                 comboboxHistorystep.SelectedIndex = 0;
 
                 AlgorithmState state_to_display = (AlgorithmState)comboboxHistorystep.Items[0];

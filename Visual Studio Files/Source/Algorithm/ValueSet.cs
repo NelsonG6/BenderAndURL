@@ -8,37 +8,37 @@ namespace ReinforcementLearning
     class ValueSet
     {
         //5 moves with q-matrix double values associated for each one
-        public Dictionary<Move, double> move_list;
+        public Dictionary<Move, double> moveList;
 
         public ValueSet()
         {
-            move_list = new Dictionary<Move, double>();
+            moveList = new Dictionary<Move, double>();
 
             //Build a dictionary with 5 moves, by default
             foreach(var i in Move.HorizontalMovesAndGrab)
             {
-                move_list.Add(i, 0f);
+                moveList.Add(i, 0f);
             }
         }
 
         public ValueSet(ValueSet set_from)
         {
-            move_list = new Dictionary<Move, double>();
-            foreach (var i in set_from.move_list)
+            moveList = new Dictionary<Move, double>();
+            foreach (var i in set_from.moveList)
             {
-                move_list.Add(i.Key, i.Value);
+                moveList.Add(i.Key, i.Value);
             }
         }
 
         public double GetBestValue()
         {
-            double to_return = 0;
-            foreach (var i in move_list.Values)
+            double toReturn = 0;
+            foreach (var i in moveList.Values)
             {
-                if (i > to_return)
-                    to_return = i;
+                if (i > toReturn)
+                    toReturn = i;
             }
-            return to_return;
+            return toReturn;
         }
 
         public double this[Move key]
@@ -56,12 +56,12 @@ namespace ReinforcementLearning
 
         public double GetValue(Move index)
         {
-            return move_list[index];
+            return moveList[index];
         }
 
         public void SetValue(Move index, double value)
         {
-            move_list[index] = value;
+            moveList[index] = value;
         }
     }
 }

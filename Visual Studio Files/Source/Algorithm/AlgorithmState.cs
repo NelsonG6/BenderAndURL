@@ -11,68 +11,67 @@ namespace ReinforcementLearning
         //Commenting this so i can just use a function that points to the most recent state
         //static public AlgorithmState current_state; //This is a pointer to the most recently generated state
 
-        static public List<AlgorithmEpisode> state_history; //This is the history of the entire run, and all the configurations and q-matrix instances.
+        static public List<AlgorithmEpisode> stateHistory; //This is the history of the entire run, and all the configurations and q-matrix instances.
                                                             //The head of this list is the current progress point of our algorithm.
 
-        static public bool algorithm_started; //Used for the status message
-        static public bool algorithm_ended;
+        static public bool algorithmStarted; //Used for the status message
+        static public bool algorithmEnded;
 
-        public bool bender_attacked;
+        public bool benderAttacked;
 
         //Non-static members
-        public BoardGame board_data; //Stores the state of the cans and walls (bender is stored with other coordinates)
+        public BoardGame boardData; //Stores the state of the cans and walls (bender is stored with other coordinates)
 
-        private StatusMessage status_message; //Used for debugging
-        public Qmatrix live_qmatrix; //Moves will be generated from here.
+        private StatusMessage statusMessage; //Used for debugging
+        public Qmatrix liveQmatrix; //Moves will be generated from here.
 
-        public PerceptionState bender_perception_starting;
-        public PerceptionState bender_perception_ending;
+        public Dictionary<UnitType, PerceptionState> startingPerceptions;
 
-        public double episode_rewards; //Session - Reward data
-        public double total_rewards;
+        public double episodeRewards; //Session - Reward data
+        public double totalRewards;
 
-        public SquareBoardBase location_initial; //Just used for the status message
+        public SquareBoardBase locationInitial; //Just used for the status message
 
-        public Dictionary<UnitType, Move> moves_this_step;
+        public Dictionary<UnitType, Move> movesThisStep;
 
-        public MoveResult result_this_step; //Moveresult stored for status
+        public MoveResult resultThisStep; //Moveresult stored for status
 
-        public double obtained_reward; //The raw reward for the action we took
+        public double obtainedReward; //The raw reward for the action we took
 
-        public int cans_collected;
+        public int cansCollected;
 
         //This should be called at the program launch, and when the reset config button is pressed
         public static void SetDefaultConfiguration()
         {
-            state_history = new List<AlgorithmEpisode>(); //initialize history
-            state_history.Add(new AlgorithmEpisode(1)); //Create the first episode. The current state is retieved from the most recent point. 
+            stateHistory = new List<AlgorithmEpisode>(); //initialize history
+            stateHistory.Add(new AlgorithmEpisode(1)); //Create the first episode. The current state is retieved from the most recent point. 
 
 
-            algorithm_ended = false;
-            algorithm_started = false;           
+            algorithmEnded = false;
+            algorithmStarted = false;           
         }
 
         public static AlgorithmState GetCurrentState()
         {
-            int episode_index = state_history.Count - 1;
+            int episode_index = stateHistory.Count - 1;
             if (episode_index == -1)
             {
                 return null; //No episodes created
             }
             else
             {
-                int step_index = state_history[episode_index].Count() - 1;
+                int step_index = stateHistory[episode_index].Count() - 1;
                 if (step_index == -1)
                     return null; //Step index shouldn't be 0, because we shouldn't call this at a time when we created a new episode but didn't put a state there.
                 else
-                    return state_history[episode_index][step_index];
+                    return stateHistory[episode_index][step_index];
             }
         }
 
         //Called at algorithm start, and on reset
         public static void StartAlgorithm()
         {
-            algorithm_started = true;
+            algorithmStarted = true;
             AddToHistory(FormsHandler.loaded_state); //Copy our state from forms handler
             GetCurrentState().StartNewEpisode();
         }
@@ -89,9 +88,9 @@ namespace ReinforcementLearning
             //We may need to add a new episode.
 
 
-            if (step_with.GetEpisodeNumber() > state_history.Count)
+            if (step_with.GetEpisodeNumber() > stateHistory.Count)
             {
-                state_history.Add(new AlgorithmEpisode(state_history.Count + 1)); //Add the first empty episode
+                stateHistory.Add(new AlgorithmEpisode(stateHistory.Count + 1)); //Add the first empty episode
             }
             else
             {
@@ -100,7 +99,7 @@ namespace ReinforcementLearning
                 step_with.Step();
             }
 
-            state_history.Last().Add(step_with); //Add the state to the history list, after everything possible has been done to it.    
+            stateHistory.Last().Add(step_with); //Add the state to the history list, after everything possible has been done to it.    
             step_with.GenerateStatusMessage();
 
 
@@ -113,13 +112,13 @@ namespace ReinforcementLearning
         //Here, a step only happens when we have been asked by the manager to *actually* take a step.
         public void Step()
         {
-            board_data.UnitPercieves(UnitType.Bender);
+            boardData.UnitPercieves(UnitType.Bender);
             //Url senses twice. If bender moves into him, he wont start chasing until next turn.
-            board_data.UnitPercieves(UnitType.Url);
+            boardData.UnitPercieves(UnitType.Url);
 
             Move best_move = null;
             //If prior to bender moving, URL could not see bender, he will not attack this turn.
-            foreach (var i in board_data.units[UnitType.Url].perception_data.perception_data)
+            foreach (var i in boardData.units[UnitType.Url].perceptionData.perception_data)
             {
                 if (i.Value == Percept.Enemy)
                 {
@@ -127,37 +126,34 @@ namespace ReinforcementLearning
                 }
             }
             if (best_move == null)
-                board_data.units[UnitType.Url].chasing = false;
+                boardData.units[UnitType.Url].chasing = false;
 
 
             //Bender section.
-            moves_this_step[UnitType.Bender] = live_qmatrix.GenerateStep(bender_perception_starting);
-            result_this_step = board_data.ApplyMove(UnitType.Bender, moves_this_step[UnitType.Bender]); //The move should be performed now, if possible.
-            obtained_reward = MoveResult.list[result_this_step]; //Get the reward for this action
+            movesThisStep[UnitType.Bender] = liveQmatrix.GenerateStep(startingPerceptions[UnitType.Bender]);
+            resultThisStep = boardData.ApplyMove(UnitType.Bender, movesThisStep[UnitType.Bender]); //The move should be performed now, if possible.
+            obtainedReward = MoveResult.list[resultThisStep]; //Get the reward for this action
 
-            episode_rewards += obtained_reward; //Update the rewards total
+            episodeRewards += obtainedReward; //Update the rewards total
 
-            if (result_this_step == MoveResult.CanCollected)
-                ++cans_collected;
+            if (resultThisStep == MoveResult.CanCollected)
+                ++cansCollected;
 
-            bender_perception_ending = board_data.units[UnitType.Bender].get_perception_state();
-
-            
             //give the value to the q matrix to digest
 
             if (GetStepNumber() == Qmatrix.step_limit && GetEpisodeNumber() > Qmatrix.episode_limit)
-                algorithm_ended = true;            
+                algorithmEnded = true;            
 
             //url 
-            board_data.UnitPercieves(UnitType.Url);
+            boardData.UnitPercieves(UnitType.Url);
             
             List<Move> best_moves = new List<Move>();
 
-            if (board_data.units[UnitType.Url].chasing == true && MyRandom.Next(0, 5) == 0)
-                board_data.units[UnitType.Url].chasing = false; //stop chasing randomly
-            if (board_data.units[UnitType.Url].chasing == true)
+            if (boardData.units[UnitType.Url].chasing == true && MyRandom.Next(0, 5) == 0)
+                boardData.units[UnitType.Url].chasing = false; //stop chasing randomly
+            if (boardData.units[UnitType.Url].chasing == true)
             {   //Greedy selection
-                foreach (var i in board_data.units[UnitType.Url].perception_data.perception_data)
+                foreach (var i in boardData.units[UnitType.Url].perceptionData.perception_data)
                 {
                     if (i.Value == Percept.Enemy)
                     {
@@ -167,16 +163,16 @@ namespace ReinforcementLearning
             }
             else //Take a random move that isn't into a wall or a diagonal
             {
-                foreach (var i in board_data.units[UnitType.Url].perception_data.perception_data)
+                foreach (var i in boardData.units[UnitType.Url].perceptionData.perception_data)
                 {
                     if (i.Value != Percept.Wall && !(Move.Diagonals.Contains(i.Key)))
                         best_moves.Add(i.Key);
 
                     if (i.Value == Percept.Enemy)
-                        board_data.units[UnitType.Url].chasing = true;
+                        boardData.units[UnitType.Url].chasing = true;
                     //When we first start chasing, we pause one time. Otherwise bender would run into us and never learn.
                 }
-                if (board_data.units[UnitType.Url].chasing == true)
+                if (boardData.units[UnitType.Url].chasing == true)
                     best_move = Move.Wait; //Wait if we just started chasing
                 else
                     best_move = best_moves[MyRandom.Next(0, best_moves.Count)];
@@ -184,33 +180,36 @@ namespace ReinforcementLearning
 
             //detect if bender was attacked
             //See if the move url selected perceives an enemy to do this
-            if(best_move != Move.Wait && board_data.units[UnitType.Url].perception_data.perception_data[best_move] == Percept.Enemy)
+            if(best_move != Move.Wait && boardData.units[UnitType.Url].perceptionData.perception_data[best_move] == Percept.Enemy)
             {   //Url attacks bender. don't move him just so its visually easier to see.
-                obtained_reward = MoveResult.list[MoveResult.EnemyEncountered];
-                bender_attacked = true;
-                result_this_step = MoveResult.EnemyEncountered;
+                obtainedReward = MoveResult.list[MoveResult.EnemyEncountered];
+                benderAttacked = true;
+                resultThisStep = MoveResult.EnemyEncountered;
             }
 
-            live_qmatrix.UpdateState(bender_perception_starting, bender_perception_ending, moves_this_step[UnitType.Bender], obtained_reward);
+            liveQmatrix.UpdateState(startingPerceptions[UnitType.Bender], GetPerception(UnitType.Bender), movesThisStep[UnitType.Bender], obtainedReward);
 
             //Move url, maybe into bender
-            board_data.ApplyMove(UnitType.Url, best_move);
-            moves_this_step[UnitType.Url] = best_move;
+            boardData.ApplyMove(UnitType.Url, best_move);
+            movesThisStep[UnitType.Url] = best_move;
+
+            //Make each unit perceieve after their step
+            
         }
 
         //Gets the qmatrix view for the give move at bender's current position
         static public string GetQmatrixView(Move move_to_get)
         {
-            ValueSet to_get = GetCurrentQmatrix().matrix_data[GetCurrentState().board_data.units[UnitType.Bender].get_perception_state()];
-            return to_get.move_list[move_to_get].ToString();
+            ValueSet to_get = GetCurrentQmatrix().matrix_data[GetCurrentState().boardData.units[UnitType.Bender].get_perception_state()];
+            return to_get.moveList[move_to_get].ToString();
         }
 
         public void EraseBoardForReset()
         {   //Used ONLY with the restart algorithm button. Keeps a few old things, like bender's position and settings
-            algorithm_started = false; //Algorithm no longer running
+            algorithmStarted = false; //Algorithm no longer running
             InitializeValues();
-            state_history = new List<AlgorithmEpisode>();
-            state_history.Add(new AlgorithmEpisode(1));
+            stateHistory = new List<AlgorithmEpisode>();
+            stateHistory.Add(new AlgorithmEpisode(1));
             FormsHandler.ResetConfiguration();
         }
 
@@ -219,9 +218,9 @@ namespace ReinforcementLearning
         //This is called when the program is launched.
         public AlgorithmState()
         {
-            board_data = new BoardGame(); //Produces a shuffled bender and can-filled board 
+            boardData = new BoardGame(); //Produces a shuffled bender and can-filled board 
 
-            moves_this_step = new Dictionary<UnitType, Move>(); //Stores a list of moves for each unit
+            
 
             InitializeValues(); //Gives us some empty defaults
         }
@@ -230,8 +229,16 @@ namespace ReinforcementLearning
         //Just a useful container for resetting some values when we want to start over, but making a new state would have us lose bender's position.
         private void InitializeValues()
         {
-            board_data.ClearCans(); //Clear the board for our initial launch(this doesn't remove bender, just cans)
-            live_qmatrix = new Qmatrix();
+            boardData.ClearCans(); //Clear the board for our initial launch(this doesn't remove bender, just cans)
+            liveQmatrix = new Qmatrix();
+            startingPerceptions = new Dictionary<UnitType, PerceptionState>();
+            movesThisStep = new Dictionary<UnitType, Move>(); //Stores a list of moves for each unit
+
+            foreach (var i in UnitType.BaseUnits)
+            {   //Initialize the perception lists
+                startingPerceptions.Add(i, null);
+                movesThisStep.Add(i, null);
+            }
         }
 
         //Copied from another algorithm state
@@ -239,41 +246,42 @@ namespace ReinforcementLearning
         //This constructor is called when a new step is being generated, so we transfer some values appropriately.
         public AlgorithmState(AlgorithmState set_from)
         {
-            cans_collected = set_from.cans_collected;
+            cansCollected = set_from.cansCollected;
 
-            episode_rewards = set_from.episode_rewards; //Reward data
-            total_rewards = set_from.total_rewards;
+            episodeRewards = set_from.episodeRewards; //Reward data
+            totalRewards = set_from.totalRewards;
 
-            board_data = new BoardGame(set_from.board_data); //Copy the board
+            boardData = new BoardGame(set_from.boardData); //Copy the board
 
             //Increase steps in here
-            live_qmatrix = new Qmatrix(set_from.live_qmatrix); //Copy the q matrix
+            liveQmatrix = new Qmatrix(set_from.liveQmatrix); //Copy the q matrix
             
             //The initial location will be the resulting location of the last step
-            location_initial = board_data.GetUnitSquare[UnitType.Bender];
+            locationInitial = boardData.GetUnitSquare[UnitType.Bender];
 
-            bender_perception_starting = set_from.bender_perception_ending;
+            startingPerceptions = new Dictionary<UnitType, PerceptionState>();
+            startingPerceptions[UnitType.Bender] = set_from.GetPerception(UnitType.Bender);
 
-            moves_this_step = new Dictionary<UnitType, Move>();
+            movesThisStep = new Dictionary<UnitType, Move>();
 
             //Detect if we reached the limit for this episode
 
 
-            if (live_qmatrix.step_number == Qmatrix.step_limit || board_data.BenderAttacked())
-                if (live_qmatrix.episode_number == Qmatrix.episode_limit)
-                    algorithm_ended = true;
+            if (liveQmatrix.step_number == Qmatrix.step_limit || boardData.BenderAttacked())
+                if (liveQmatrix.episode_number == Qmatrix.episode_limit)
+                    algorithmEnded = true;
                 else
                 {
                     StartNewEpisode();
                 }
             else
-                live_qmatrix.step_number++;
+                liveQmatrix.step_number++;
 
         }
 
         public Percept GetBenderPercept(Move direction_to_check)
         {
-            return board_data.units[UnitType.Bender].get_percept(direction_to_check);
+            return boardData.units[UnitType.Bender].get_percept(direction_to_check);
         }
 
         //Used to erase session-based progress.
@@ -281,22 +289,20 @@ namespace ReinforcementLearning
         //Not called when the program launches
         public void StartNewEpisode()
         {
+            
 
+            cansCollected = 0;
+            episodeRewards = 0; //Session - Reward data
 
-            cans_collected = 0;
-            episode_rewards = 0; //Session - Reward data
+            boardData.ShuffleCansAndUnits(); //Shuffle the the current board.
 
-            board_data.ShuffleCansAndUnits(); //Shuffle the the current board.
-
-            foreach(var i in board_data.units.Keys)
+            //Each unit perceives 
+            foreach(var i in boardData.units.Keys)
             {
-                board_data.UnitPercieves(i);
+                boardData.UnitPercieves(i);
             }
 
-            bender_perception_starting = board_data.units[UnitType.Bender].get_perception_state();
-            bender_perception_ending = board_data.units[UnitType.Bender].get_perception_state();
-
-            live_qmatrix.ProcessNewEpisode();
+            liveQmatrix.ProcessNewEpisode();
         }
 
 
@@ -307,18 +313,18 @@ namespace ReinforcementLearning
 
         public static Qmatrix GetCurrentQmatrix()
         {
-            return GetCurrentState().live_qmatrix;
+            return GetCurrentState().liveQmatrix;
         }
 
         public static BoardGame GetCurrentBoard()
         {
-            return GetCurrentState().board_data;
+            return GetCurrentState().boardData;
         }
 
         //Add a state
         public static void AddToHistory(AlgorithmState to_add)
         {
-            state_history.Last().Add(to_add);
+            stateHistory.Last().Add(to_add);
         }
         
         public int GetEpisodeLimit()
@@ -333,28 +339,38 @@ namespace ReinforcementLearning
 
         public int GetEpisodeNumber()
         {
-            return live_qmatrix.episode_number;
+            return liveQmatrix.episode_number;
         }
 
         public int GetStepNumber()
         {
-            return live_qmatrix.step_number;
+            return liveQmatrix.step_number;
         }
 
         private void GenerateStatusMessage()
         {
-            status_message = new StatusMessage(this);
+            statusMessage = new StatusMessage(this);
         }
 
         public string GetStatus()
         {
-            if(status_message == null)
+            if(statusMessage == null)
             {
                 StatusMessage status = new StatusMessage(this);
                 return status.GetMessage();
                 
             }
-            return status_message.GetMessage();
+            return statusMessage.GetMessage();
+        }
+
+        private void UnitPerceives(UnitType toSee)
+        {
+            boardData.UnitPercieves(toSee);
+        }
+
+        private PerceptionState GetPerception(UnitType toSee)
+        {
+            return boardData.units[toSee].perceptionData;
         }
     } 
 }

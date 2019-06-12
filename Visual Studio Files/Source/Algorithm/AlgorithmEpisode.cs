@@ -8,41 +8,41 @@ namespace ReinforcementLearning
 {
     class AlgorithmEpisode
     {
-        public List<AlgorithmState> state_history_data;
+        public List<AlgorithmState> stateHistoryData;
 
-        public int episode_number;
+        public int episodeNumber;
 
-        public AlgorithmEpisode(int set_episode)
+        public AlgorithmEpisode(int setEpisode)
         {
-            state_history_data = new List<AlgorithmState>();
-            episode_number = set_episode;
+            stateHistoryData = new List<AlgorithmState>();
+            episodeNumber = setEpisode;
         }
 
         override public string ToString()
         {
-            return "[Episode #" + episode_number.ToString() + "]";
+            return "[Episode #" + episodeNumber.ToString() + "]";
         }
 
         //Should allow indexing
         public AlgorithmState this[int i]
         {
-            get { return state_history_data[i]; }
-            set { state_history_data[i] = value; }
+            get { return stateHistoryData[i]; }
+            set { stateHistoryData[i] = value; }
         }
 
         public int Count()
         {
-            return state_history_data.Count;
+            return stateHistoryData.Count;
         }
 
         public void Add(AlgorithmState to_add)
         {
-            state_history_data.Add(to_add);
+            stateHistoryData.Add(to_add);
         }
 
         public AlgorithmState[] ToArray()
         {
-            return state_history_data.ToArray();
+            return stateHistoryData.ToArray();
         }
     }
 }

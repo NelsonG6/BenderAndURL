@@ -9,37 +9,22 @@ namespace ReinforcementLearning
     //Handles the background images that the squares can have
     static class Backgrounds
     {
-        private static System.Drawing.Bitmap last_move_bitmap;
-        private static System.Drawing.Bitmap explored_bitmap;
-        private static System.Drawing.Bitmap unexplored_bitmap;
+        private static readonly System.Drawing.Bitmap LastMove;
+        private static readonly System.Drawing.Bitmap ExploredMove;
+        private static readonly System.Drawing.Bitmap UnexploredMove;
 
         static public Dictionary<SquareVisitedState, System.Drawing.Bitmap> dictionary;
 
         static Backgrounds()
         {
-            last_move_bitmap = Properties.Resources.background_last_move;
-            explored_bitmap = Properties.Resources.background_explored;
-            unexplored_bitmap = Properties.Resources.background_unexplored;
+            LastMove = Properties.Resources.BackgroundLast;
+            ExploredMove = Properties.Resources.BackgroundExplored;
+            UnexploredMove = Properties.Resources.BackgroundUnexplored;
 
             dictionary = new Dictionary<SquareVisitedState, System.Drawing.Bitmap>();
-            dictionary.Add(SquareVisitedState.last(), last_move_bitmap);
-            dictionary.Add(SquareVisitedState.explored(), explored_bitmap);
-            dictionary.Add(SquareVisitedState.unexplored(), unexplored_bitmap);
-        }
-            
-        public static System.Drawing.Bitmap last_move()
-        {
-            return last_move_bitmap;
-        }
-
-        public static System.Drawing.Bitmap explored()
-        {
-            return explored_bitmap;
-        }
-
-        public static System.Drawing.Bitmap unexlored()
-        {
-            return unexplored_bitmap;
+            dictionary.Add(SquareVisitedState.Last, LastMove);
+            dictionary.Add(SquareVisitedState.Explored, ExploredMove);
+            dictionary.Add(SquareVisitedState.Unexplored, UnexploredMove);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace ReinforcementLearning
                 pictureData.Image = null;
 
             //Set background
-            pictureData.BackgroundImage = Backgrounds.dictionary[visited_state]; //Visisted state belongs to the base class, and is unexplored by default
+            pictureData.BackgroundImage = Backgrounds.dictionary[visited_state]; //Visisted state belongs to the base class, and is Unexplored by default
         }
 
 

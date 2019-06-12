@@ -7,29 +7,29 @@ namespace ReinforcementLearning
     //This is used for individual instances of the units, for tracking in history and debugging
     class UnitBase
     {
-        public PerceptionState perception_data; //Store the percepts for this unit
+        public PerceptionState perceptionData; //Store the percepts for this unit
 
-        public SquareBoardGame current_location;
-        public SquareBoardGame previous_location;
+        public SquareBoardGame currentLocation;
+        public SquareBoardGame previousLocation;
 
         public bool chasing; //for url
 
-        public string unit_name;
+        public string unitName;
 
         public UnitType enemy;
 
         public int ID; //Used to keep track in debugging
     
-        public UnitBase(UnitBase set_from)
+        public UnitBase(UnitBase setFrom)
         {            
-            unit_name = set_from.unit_name;
-            perception_data = set_from.perception_data;
-            current_location = set_from.current_location;
-            previous_location = set_from.previous_location;
+            unitName = setFrom.unitName;
+            perceptionData = setFrom.perceptionData;
+            currentLocation = setFrom.currentLocation;
+            previousLocation = setFrom.previousLocation;
 
-            enemy = set_from.enemy;
-            ID = set_from.ID++;
-            chasing = set_from.chasing;
+            enemy = setFrom.enemy;
+            ID = setFrom.ID++;
+            chasing = setFrom.chasing;
         }
 
         public UnitBase()
@@ -39,17 +39,17 @@ namespace ReinforcementLearning
 
         public PerceptionState get_perception_state()
         {
-            return perception_data;
+            return perceptionData;
         }
 
-        public Percept get_percept(Move direction_to_check)
+        public Percept get_percept(Move directionToCheck)
         {
-            return perception_data.get_percept(direction_to_check);
+            return perceptionData.get_percept(directionToCheck);
         }
 
         override public string ToString()
         {
-            return unit_name;
+            return unitName;
         }
     }
 }

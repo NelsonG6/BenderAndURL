@@ -98,7 +98,7 @@ namespace ReinforcementLearning
                 {
                     //Greedy selection, then random among best matches.
                     //Loop through the move-double pair, and do a random selection of any move that is tied for best action.
-                    foreach (var i in matrix_data[perceieved_state].move_list)
+                    foreach (var i in matrix_data[perceieved_state].moveList)
                     {
                         if (best_percepts.Count == 0)
                             best_percepts.Add(i.Key, i.Value);

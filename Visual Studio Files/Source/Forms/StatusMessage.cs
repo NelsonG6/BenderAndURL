@@ -3,33 +3,33 @@
     //A container class for the status message data posted every move
     class StatusMessage
     {
-        public static bool program_launch_message;
+        public static bool programLaunchMessage;
 
-        string complete_message;
+        string completeMessage;
 
-        string starting_data;
+        string startingData;
 
-        string initial_percept_data;
+        string initialPerceptData;
 
-        string move_being_applied_data;
-        string moveresult_data;
-        string reward_data;
+        string moveBeingAppliedData;
+        string moveResultData;
+        string rewardData;
 
-        string new_percept_data;
-        string new_position_data;
-        string qmatrix_adjustment_data;
-        string ending_data;
+        string newPerceptData;
+        string newPositionData;
+        string qmatrixAdjustmentData;
+        string endingData;
 
-        string url_data;
+        string urlData;
 
         static StatusMessage()
         {
-            program_launch_message = false;
+            programLaunchMessage = false;
         }
 
         public string GetMessage()
         {
-            return complete_message;
+            return completeMessage;
         }
 
         override public string ToString()
@@ -39,110 +39,110 @@
 
         public StatusMessage(AlgorithmState set_from)
         {
-            complete_message = "";
-            if (!program_launch_message)
+            completeMessage = "";
+            if (!programLaunchMessage)
             {
-                program_launch_message = true;
-                complete_message = "The program has been launched.\nBender's starting position is (";
-                complete_message += (set_from.board_data.GetUnitSquare[UnitType.Bender].x + 1).ToString();
-                complete_message += ", " + (set_from.board_data.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
+                programLaunchMessage = true;
+                completeMessage = "The program has been launched.\nBender's starting position is (";
+                completeMessage += (set_from.boardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
+                completeMessage += ", " + (set_from.boardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
             }
-            else if (!AlgorithmState.algorithm_started)
+            else if (!AlgorithmState.algorithmStarted)
 
-                complete_message = "The board was reset. Progress has been erased.";
+                completeMessage = "The board was reset. Progress has been erased.";
 
             //Starting data
             else if (set_from.GetStepNumber() == 0)
             {
-                complete_message = "A new episode has been created.\n";
-                complete_message += "Starting turn [Episode: " + set_from.GetEpisodeNumber().ToString();
-                complete_message += ", Step: " + set_from.GetStepNumber().ToString() + "]";
-                complete_message += " at position (" + (set_from.board_data.GetUnitSquare[UnitType.Bender].x + 1).ToString();
-                complete_message += ", " + (set_from.board_data.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
-                complete_message += System.Environment.NewLine + "Bender's initial perception is:";
-                complete_message += System.Environment.NewLine + set_from.bender_perception_ending.ToString() + ".";
+                completeMessage = "A new episode has been created.\n";
+                completeMessage += "Starting turn [Episode: " + set_from.GetEpisodeNumber().ToString();
+                completeMessage += ", Step: " + set_from.GetStepNumber().ToString() + "]";
+                completeMessage += " at position (" + (set_from.boardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
+                completeMessage += ", " + (set_from.boardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
+                completeMessage += System.Environment.NewLine + "Bender's initial perception is:";
+                completeMessage += System.Environment.NewLine + set_from.startingPerceptions[UnitType.Bender].ToString() + ".";
             }
             else
             {
 
                 //"Episode #, Step # beginning."
-                starting_data = "Starting turn [Episode: " + set_from.GetEpisodeNumber().ToString() + ", Step: " + set_from.GetStepNumber().ToString() + "]";
-                starting_data += " at position (" + (set_from.location_initial.x + 1).ToString() + ", " + (set_from.location_initial.y + 1).ToString() + ").";
+                startingData = "Starting turn [Episode: " + set_from.GetEpisodeNumber().ToString() + ", Step: " + set_from.GetStepNumber().ToString() + "]";
+                startingData += " at position (" + (set_from.locationInitial.x + 1).ToString() + ", " + (set_from.locationInitial.y + 1).ToString() + ").";
 
-                initial_percept_data = "Bender's initial perception is: " + System.Environment.NewLine;
-                initial_percept_data += set_from.bender_perception_starting.ToString();
+                initialPerceptData = "Bender's initial perception is: " + System.Environment.NewLine;
+                initialPerceptData += set_from.startingPerceptions[UnitType.Bender].ToString();
 
-                move_being_applied_data = "";
+                moveBeingAppliedData = "";
 
-                if (set_from.live_qmatrix.randomly_moved)
-                    move_being_applied_data += "A the move was randomly generated." + System.Environment.NewLine;
+                if (set_from.liveQmatrix.randomly_moved)
+                    moveBeingAppliedData += "A the move was randomly generated." + System.Environment.NewLine;
                 else
-                    move_being_applied_data += "The move was greedily chosen." + System.Environment.NewLine;
+                    moveBeingAppliedData += "The move was greedily chosen." + System.Environment.NewLine;
 
-                if (set_from.moves_this_step.Count == 0)
-                    move_being_applied_data += "No move this turn.";
-                else if (set_from.moves_this_step[UnitType.Bender] == Move.Grab)
-                    move_being_applied_data += "A [Grab] was attempted.";
+                if (set_from.movesThisStep.Count == 0)
+                    moveBeingAppliedData += "No move this turn.";
+                else if (set_from.movesThisStep[UnitType.Bender] == Move.Grab)
+                    moveBeingAppliedData += "A [Grab] was attempted.";
                 else
-                    move_being_applied_data += "A [" + set_from.moves_this_step[UnitType.Bender].long_name + "] was attempted.";
+                    moveBeingAppliedData += "A [" + set_from.movesThisStep[UnitType.Bender].long_name + "] was attempted.";
 
                 //moveresult
-                if(set_from.result_this_step != null)
-                moveresult_data = "The result of the move was [" + set_from.result_this_step.result_data + "].";
+                if(set_from.resultThisStep != null)
+                moveResultData = "The result of the move was [" + set_from.resultThisStep.result_data + "].";
 
                 //The reward from this action was: 
                 string math_sign = "+";
-                if (set_from.obtained_reward < 0)
+                if (set_from.obtainedReward < 0)
                     math_sign = "";
-                reward_data = "The reward for this action was: [" + math_sign + set_from.obtained_reward.ToString() + "]";
+                rewardData = "The reward for this action was: [" + math_sign + set_from.obtainedReward.ToString() + "]";
                 //reward_data + = ", applied to state ";
                 //Add bender perception data in his new location here
 
                 //"Bender's position is:
-                new_position_data = "The resulting position was (" + (set_from.board_data.GetUnitSquare[UnitType.Bender].x + 1).ToString();
-                new_position_data += ", " + (set_from.board_data.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
+                newPositionData = "The resulting position was (" + (set_from.boardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
+                newPositionData += ", " + (set_from.boardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
 
                 //New percept
 
-                new_percept_data = "The percept at the new location is: " + System.Environment.NewLine;
-                new_percept_data += set_from.board_data.units[UnitType.Bender].perception_data.ToString() + ".";
+                newPerceptData = "The percept at the new location is: " + System.Environment.NewLine;
+                newPerceptData += set_from.boardData.units[UnitType.Bender].perceptionData.ToString() + ".";
 
                 //"The calculation used on the q matrix was:"
 
-                qmatrix_adjustment_data = "No qmatrix entry was made.";
-                if (set_from.live_qmatrix.did_we_update)
-                    qmatrix_adjustment_data = "A q-matrix entry was made for this perception.";
+                qmatrixAdjustmentData = "No qmatrix entry was made.";
+                if (set_from.liveQmatrix.did_we_update)
+                    qmatrixAdjustmentData = "A q-matrix entry was made for this perception.";
 
-                if (set_from.moves_this_step.Keys.Count != 0)
+                if (set_from.movesThisStep.Keys.Count != 0)
                 {
-                    url_data = "Url made a move of " + set_from.moves_this_step[UnitType.Url].long_name + ".";
-                    if (set_from.board_data.units[UnitType.Url].chasing)
-                        url_data += System.Environment.NewLine + "Url is chasing bender.";
+                    urlData = "Url made a move of " + set_from.movesThisStep[UnitType.Url].long_name + ".";
+                    if (set_from.boardData.units[UnitType.Url].chasing)
+                        urlData += System.Environment.NewLine + "Url is chasing bender.";
                     else
-                        url_data += System.Environment.NewLine + "Url is wandering randomly.";
+                        urlData += System.Environment.NewLine + "Url is wandering randomly.";
 
                 }
 
 
                 //ending data
-                if(set_from.bender_attacked)
+                if(set_from.benderAttacked)
                 {
-                    ending_data += "Bender was attacked this turn, and the board was reset.";
+                    endingData += "Bender was attacked this turn, and the board was reset.";
                 }
-                ending_data = "Move [" + set_from.GetStepNumber().ToString() + "] complete.";
+                endingData = "Move [" + set_from.GetStepNumber().ToString() + "] complete.";
 
                 string newline = System.Environment.NewLine;
 
-                complete_message = starting_data;
-                complete_message += newline + initial_percept_data;
-                complete_message += newline + move_being_applied_data;
-                complete_message += newline + moveresult_data;
-                complete_message += newline + reward_data;
-                complete_message += newline + new_position_data;
-                complete_message += newline + new_percept_data;
-                complete_message += newline + url_data;
-                complete_message += newline + qmatrix_adjustment_data;
-                complete_message += newline + ending_data;
+                completeMessage = startingData;
+                completeMessage += newline + initialPerceptData;
+                completeMessage += newline + moveBeingAppliedData;
+                completeMessage += newline + moveResultData;
+                completeMessage += newline + rewardData;
+                completeMessage += newline + newPositionData;
+                completeMessage += newline + newPerceptData;
+                completeMessage += newline + urlData;
+                completeMessage += newline + qmatrixAdjustmentData;
+                completeMessage += newline + endingData;
 
             }
         }

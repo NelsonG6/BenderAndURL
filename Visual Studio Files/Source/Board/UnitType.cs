@@ -9,36 +9,36 @@ namespace ReinforcementLearning
         public HashSet<Move> PerceptionCauses; //A list of the moves that the unit uses to get his perception
 
         //Stores all our pre-defined unit moves
-        public HashSet<Move> unit_move_list;
+        public HashSet<Move> unitMoveList;
 
-        public string type_name;
+        public string typeName;
 
-        public static readonly HashSet<UnitType> base_units; //A list of units
+        public static readonly HashSet<UnitType> BaseUnits; //A list of units
 
         public static readonly UnitType Bender;
         public static readonly UnitType Url;
 
         static UnitType()
         {
-            base_units = new HashSet<UnitType>();
+            BaseUnits = new HashSet<UnitType>();
             Bender = new UnitType();
-            Bender.unit_name = "Bender";
-            Bender.type_name = "Bender";
-            Bender.unit_move_list = new HashSet<Move>();
-            Bender.unit_move_list.UnionWith(Move.HorizontalMovesAndGrab);
+            Bender.unitName = "Bender";
+            Bender.typeName = "Bender";
+            Bender.unitMoveList = new HashSet<Move>();
+            Bender.unitMoveList.UnionWith(Move.HorizontalMovesAndGrab);
             Bender.PerceptionCauses = new HashSet<Move>();
             Bender.PerceptionCauses.UnionWith(Move.AllMoves); //Perception comes from any of the 9 possible moves
-            base_units.Add(Bender);
+            BaseUnits.Add(Bender);
 
             Url = new UnitType();
-            Url.unit_name = "Url";
-            Url.type_name = "Url";
+            Url.unitName = "Url";
+            Url.typeName = "Url";
             Url.enemy = Bender;
-            Url.unit_move_list = new HashSet<Move>();
-            Url.unit_move_list.UnionWith(Move.AllMoves);
+            Url.unitMoveList = new HashSet<Move>();
+            Url.unitMoveList.UnionWith(Move.AllMoves);
             Url.PerceptionCauses = new HashSet<Move>();//perception is caused by any of the 9 possible moves
             Url.PerceptionCauses.UnionWith(Move.AllMoves); //perception is caused by any of the 9 possible moves
-            base_units.Add(Url);
+            BaseUnits.Add(Url);
 
             Bender.enemy = Url;
         }

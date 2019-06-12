@@ -61,8 +61,8 @@ namespace ReinforcementLearning
                 for (int j = 0; j < 10; j++)
                 {
                     board_data[i].Add(new SquareBoardGame((SquareBoardGame)set_from.board_data[i][j]));
-                    if (board_data[i][j].visited_state == SquareVisitedState.last() && !board_data[i][j].UnitsPresent[UnitType.Bender])
-                        board_data[i][j].visited_state = SquareVisitedState.explored();
+                    if (board_data[i][j].visited_state == SquareVisitedState.Last && !board_data[i][j].UnitsPresent[UnitType.Bender])
+                        board_data[i][j].visited_state = SquareVisitedState.Explored;
                 }
             }
 
@@ -99,12 +99,12 @@ namespace ReinforcementLearning
                 foreach (var j in i)
                 {
                     ((SquareBoardGame)j).randomize_beer_presence();
-                    ((SquareBoardGame)j).visited_state = SquareVisitedState.unexplored();
+                    ((SquareBoardGame)j).visited_state = SquareVisitedState.Unexplored;
                 }
             }
 
             ShuffleUnits(); //Place bender randomly somewhere
-            //get_square_unit_is_on().visited_state = SquareVisitedState.last();
+            //get_square_unit_is_on().visited_state = SquareVisitedState.Last;
         }
 
 
@@ -163,7 +163,7 @@ namespace ReinforcementLearning
             (GetUnitSquare[UnitType.Url]).UnitsPresent[UnitType.Url] = true; 
 
             //Assign visited state based on bender
-            (GetUnitSquare[UnitType.Bender]).visited_state = SquareVisitedState.last();
+            (GetUnitSquare[UnitType.Bender]).visited_state = SquareVisitedState.Last;
 
             //Have the units look at their surroundings
             UnitPercieves(UnitType.Bender);
@@ -183,7 +183,7 @@ namespace ReinforcementLearning
             //Translated: for each move, percieve with this move, and update the perception for this move.
 
             find_perception.set_name();
-            units[to_find].perception_data = find_perception;
+            units[to_find].perceptionData = find_perception;
         }
 
         //Used when the robot moves *only*, otherwise, the perception will be checked from the state of the unit.
@@ -218,9 +218,9 @@ namespace ReinforcementLearning
                 foreach (var j in i)
                 {
                     j.beer_can_present = false;
-                    if (j.UnitsPresent[UnitType.Bender]) j.visited_state = SquareVisitedState.last();
+                    if (j.UnitsPresent[UnitType.Bender]) j.visited_state = SquareVisitedState.Last;
                     else
-                        j.visited_state = SquareVisitedState.unexplored();
+                        j.visited_state = SquareVisitedState.Unexplored;
                 }
             }
         }
@@ -249,7 +249,7 @@ namespace ReinforcementLearning
 
         public MoveResult ApplyMove(UnitType unit_to_move, Move move_to_apply)
         {
-            GetUnitSquare[unit_to_move].visited_state = SquareVisitedState.last();
+            GetUnitSquare[unit_to_move].visited_state = SquareVisitedState.Last;
 
             //Get the move result based on the current condition
             if (GetUnitSquare[unit_to_move].CheckIfWallsPreventMove(move_to_apply))
@@ -286,7 +286,7 @@ namespace ReinforcementLearning
             GetUnitSquare[unit_to_move] = (SquareBoardGame)board_data[x][y];
 
             GetUnitSquare[unit_to_move].UnitsPresent[unit_to_move] = true;
-            GetUnitSquare[unit_to_move].visited_state = SquareVisitedState.last();
+            GetUnitSquare[unit_to_move].visited_state = SquareVisitedState.Last;
              
             UnitPercieves(unit_to_move); //take in new surroundings
         }

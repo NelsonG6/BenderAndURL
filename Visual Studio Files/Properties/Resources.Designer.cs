@@ -173,9 +173,9 @@ namespace ReinforcementLearning.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap background_explored {
+        internal static System.Drawing.Bitmap BackgroundExplored {
             get {
-                object obj = ResourceManager.GetObject("background_explored", resourceCulture);
+                object obj = ResourceManager.GetObject("BackgroundExplored", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -183,9 +183,9 @@ namespace ReinforcementLearning.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap background_last_move {
+        internal static System.Drawing.Bitmap BackgroundLast {
             get {
-                object obj = ResourceManager.GetObject("background_last_move", resourceCulture);
+                object obj = ResourceManager.GetObject("BackgroundLast", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -193,9 +193,9 @@ namespace ReinforcementLearning.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap background_unexplored {
+        internal static System.Drawing.Bitmap BackgroundUnexplored {
             get {
-                object obj = ResourceManager.GetObject("background_unexplored", resourceCulture);
+                object obj = ResourceManager.GetObject("BackgroundUnexplored", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -14,18 +14,18 @@ namespace ReinforcementLearning
         public Dictionary<UnitBase, bool> UnitsPresent; //A list of units we contain in this square
         //Even though only one unit is possible at a time, this is necessary so we can store a presence value for either unit.
 
-        public SquareVisitedState visited_state; //Using a string to store one of three values: last move, unexplored, explored
+        public SquareVisitedState visited_state; //Using a string to store one of three values: last move, Unexplored, explored
 
         public int x;
         public int y;
 
         public SquareBoardBase(int set_x, int set_y)
         {
-            visited_state = SquareVisitedState.unexplored(); //Deafult
+            visited_state = SquareVisitedState.Unexplored; //Deafult
 
             //Initialize units present
             UnitsPresent = new Dictionary<UnitBase, bool>();
-            foreach(var i in UnitType.base_units)
+            foreach(var i in UnitType.BaseUnits)
             {
                 UnitsPresent.Add(i, false);
             }
