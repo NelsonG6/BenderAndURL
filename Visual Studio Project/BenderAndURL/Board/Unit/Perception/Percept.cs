@@ -5,7 +5,7 @@ namespace BenderAndURL
     //This class is just a wrapper for one of three possible strings, but it helps enforce the type.
     class Percept
     {
-        public string percept_data;
+        public string perceptData;
 
         public static readonly Percept Wall;
         public static readonly Percept Empty;
@@ -22,7 +22,7 @@ namespace BenderAndURL
             Wall = new Percept("Wall");
             Empty = new Percept("Empty");
             Can = new Percept("Can");
-            Enemy = new Percept("Enemey");
+            Enemy = new Percept("Enemy");
 
             list = new List<Percept>();
             list.Add(Wall);
@@ -34,18 +34,18 @@ namespace BenderAndURL
 
         public Percept()
         {
-            percept_data = "empty";
+            perceptData = "empty";
             //deleted the move the percept was storing
         }
 
         public Percept(string to_set)
         {
-            percept_data = to_set;
+            perceptData = to_set;
         }
 
         override public string ToString()
         {
-            return percept_data;
+            return perceptData;
         }
 
         public static List<Percept> GetList()

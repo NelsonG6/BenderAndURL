@@ -17,7 +17,7 @@ namespace BenderAndURL
         private void Form1Load(object sender, EventArgs e)
         {
 
-            AlgorithmState.SetDefaultConfiguration();
+            AlgorithmManager.SetDefaultConfiguration();
 
             //Second entry point of the program.
             //When the form loads, we'll create some pictureboxes, that will function as the robot world grid.            
@@ -75,15 +75,17 @@ namespace BenderAndURL
         private void startAlgorithm(object sender, EventArgs e)
         {
             change_enabled_setting(); //Toggle controls
-            AlgorithmState.StartAlgorithm();
+            AlgorithmManager.StartAlgorithm();
 
-            FormsHandler.LoadAndDisplayState(AlgorithmState.GetCurrentState());
+            FormsHandler.LoadAndDisplayState(AlgorithmManager.GetCurrentState());
         }
 
         private void restartAlgorithm_buttonClick(object sender, EventArgs e)
         {
-            FormsHandler.StopAlgorithm(AlgorithmState.GetCurrentState());
+            FormsHandler.loadedState = AlgorithmManager.GetCurrentState();
+            AlgorithmManager.EraseBoard();
             
+            FormsHandler.ResetConfiguration(); //Clear comboboxes and other forms
             change_enabled_setting(); //Togle controls
         }
 
@@ -99,7 +101,23 @@ namespace BenderAndURL
             int initial_delay = Int32.Parse(comboboxDelayms.Text);
             int delay = initial_delay;
 
-            if(stepsToTake > 1)
+            if(checkBox1.Checked)
+            {
+                FormsHandler.hasUrlStartedChasing = true;
+            }
+
+            if(FormsHandler.hasUrlStartedChasing)
+            {
+                while(FormsHandler.hasUrlStartedChasing)
+                {
+                    AlgorithmManager.StepPrepare();
+                    
+                }
+                FormsHandler.LoadAndDisplayState(AlgorithmManager.GetCurrentState());
+            }
+
+
+            else if(stepsToTake > 1)
             {
                 textboxProgresssteps.Text = stepsToTake.ToString();
                 groupboxCountdown.Enabled = true;
@@ -107,8 +125,8 @@ namespace BenderAndURL
                 groupboxHistory.Enabled = false;
                 while (stepsToTake-- > 0 && !FormsHandler.halted)
                 {
-                    AlgorithmState.StepPrepare();
-                    FormsHandler.LoadAndDisplayState(AlgorithmState.GetCurrentState());
+                    AlgorithmManager.StepPrepare();
+                    FormsHandler.LoadAndDisplayState(AlgorithmManager.GetCurrentState());
                     textboxProgresssteps.Text = stepsToTake.ToString();
                     do
                     {
@@ -124,8 +142,8 @@ namespace BenderAndURL
 
             else
             {
-                AlgorithmState.StepPrepare();
-                FormsHandler.LoadAndDisplayState(AlgorithmState.GetCurrentState());
+                AlgorithmManager.StepPrepare();
+                FormsHandler.LoadAndDisplayState(AlgorithmManager.GetCurrentState());
             }
             
         }
@@ -482,8 +500,13 @@ namespace BenderAndURL
                     comboboxDelayms.Text = InitialSettings.MS_Delay.ToString();
                 else
                     comboboxDelayms.Text = result.ToString();
-
             }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            comboboxAdvancesteps.Enabled = !comboboxAdvancesteps.Enabled;
+            comboboxAdvanceepisodes.Enabled = !comboboxAdvanceepisodes.Enabled;
         }
     }
 }

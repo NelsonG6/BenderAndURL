@@ -175,6 +175,7 @@ namespace BenderAndURL
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox17 = new System.Windows.Forms.PictureBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupboxInitialsettings.SuspendLayout();
             this.groupboxRewards.SuspendLayout();
             this.groupboxQmatrix.SuspendLayout();
@@ -426,7 +427,7 @@ namespace BenderAndURL
             // buttonRestart
             // 
             this.buttonRestart.Enabled = false;
-            this.buttonRestart.Location = new System.Drawing.Point(35, 137);
+            this.buttonRestart.Location = new System.Drawing.Point(36, 155);
             this.buttonRestart.Margin = new System.Windows.Forms.Padding(4);
             this.buttonRestart.Name = "buttonRestart";
             this.buttonRestart.Size = new System.Drawing.Size(210, 27);
@@ -751,6 +752,7 @@ namespace BenderAndURL
             // groupboxAlgorithmprogress
             // 
             this.groupboxAlgorithmprogress.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.groupboxAlgorithmprogress.Controls.Add(this.checkBox1);
             this.groupboxAlgorithmprogress.Controls.Add(this.label46);
             this.groupboxAlgorithmprogress.Controls.Add(this.comboboxDelayms);
             this.groupboxAlgorithmprogress.Controls.Add(this.label16);
@@ -1795,6 +1797,17 @@ namespace BenderAndURL
             this.pictureBox5.TabIndex = 27;
             this.pictureBox5.TabStop = false;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(35, 127);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(145, 21);
+            this.checkBox1.TabIndex = 27;
+            this.checkBox1.Text = "Loop until chasing";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -2030,6 +2043,7 @@ namespace BenderAndURL
         private Label label47;
         private Button buttonStop;
         private PictureBox pictureBox4;
+        private CheckBox checkBox1;
     }
 }
 

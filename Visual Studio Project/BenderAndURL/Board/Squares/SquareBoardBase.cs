@@ -25,7 +25,7 @@ namespace BenderAndURL
 
             //Initialize units present
             UnitsPresent = new Dictionary<UnitBase, bool>();
-            foreach(var i in UnitType.BaseUnits)
+            foreach(var i in UnitType.List)
             {
                 UnitsPresent.Add(i, false);
             }

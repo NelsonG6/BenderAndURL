@@ -22,6 +22,11 @@ namespace BenderAndURL
             result_data = to_set;
         }
 
+        public string ToString()
+        {
+            return result_data;
+        }
+
         static MoveResult()
         {
             list = new Dictionary<MoveResult, double>(); //initialize reinforcement factor list

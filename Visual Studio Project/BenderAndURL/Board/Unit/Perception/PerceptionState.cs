@@ -11,7 +11,7 @@ namespace BenderAndURL
         public SortedDictionary<Move, Percept> perceptionData;
 
         public string name_without_id;
-        public string name_with_id;
+        public string nameWithId;
 
         public int ID;
 
@@ -32,7 +32,7 @@ namespace BenderAndURL
 
             ID = IDCount++;
 
-            setName();
+            SetName();
         }
 
         public bool Equals(PerceptionState toCheck)
@@ -50,7 +50,7 @@ namespace BenderAndURL
             return name_without_id.GetHashCode();
         }
 
-        public bool does_dictionaryMatch(Dictionary<Move, Percept> toCheck)
+        public bool DoesDictionaryMatch(Dictionary<Move, Percept> toCheck)
         {
             foreach(var i in toCheck)
             {
@@ -60,7 +60,7 @@ namespace BenderAndURL
             return true;
         }
 
-        public Percept getPercept(Move perceptionCause)
+        public Percept GetPercept(Move perceptionCause)
         {
             return perceptionData[perceptionCause];
         }
@@ -74,7 +74,7 @@ namespace BenderAndURL
             }
         }
 
-        public void setName()
+        public void SetName()
         {
             string part_one = "[ID: " + ID.ToString() + "]";
 
@@ -85,22 +85,22 @@ namespace BenderAndURL
                 partTwo += "[" + i.shortName + ": " + perceptionData[i].ToString() + "]";
             }
 
-            name_with_id = part_one + partTwo;
+            nameWithId = part_one + partTwo;
             name_without_id = partTwo;
 
         }
 
-        public void set_id(int to_set)
+        public void SetId(int to_set)
         {
             ID = to_set;
         }
 
         public override string ToString()
         {
-            return name_with_id;
+            return nameWithId;
         }
 
-        public int compare(PerceptionState compareTo)
+        public int Compare(PerceptionState compareTo)
         {
             int compareTotal = 0;
             foreach (var i in Move.HorizontalMovesAndGrab)
@@ -111,7 +111,7 @@ namespace BenderAndURL
             return compareTotal;
         }
 
-        public bool contains(Move move, Percept percept)
+        public bool Contains(Move move, Percept percept)
         {
             if (perceptionData[move] == percept)
                 return true;

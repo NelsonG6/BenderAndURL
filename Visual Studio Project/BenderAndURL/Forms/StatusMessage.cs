@@ -22,10 +22,16 @@
 
         string urlData;
 
+        static public StatusMessage ErasedMessage;
+
         static StatusMessage()
         {
             programLaunchMessage = false;
+            ErasedMessage = new StatusMessage();
+            ErasedMessage.completeMessage = "The board has been reset.";           
         }
+
+        public StatusMessage() { }
 
         public string GetMessage()
         {
@@ -39,6 +45,9 @@
 
         public StatusMessage(AlgorithmState setFrom)
         {
+
+            string newline = System.Environment.NewLine;
+
             completeMessage = "";
             if (!programLaunchMessage)
             {
@@ -47,7 +56,7 @@
                 completeMessage += (setFrom.boardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
                 completeMessage += ", " + (setFrom.boardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
             }
-            else if (!AlgorithmState.algorithmStarted)
+            else if (!AlgorithmManager.algorithmStarted)
 
                 completeMessage = "The board was reset. Progress has been erased.";
 
@@ -59,18 +68,21 @@
                 completeMessage += ", Step: " + setFrom.GetStepNumber().ToString() + "]";
                 completeMessage += " at position (" + (setFrom.boardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
                 completeMessage += ", " + (setFrom.boardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
-                completeMessage += System.Environment.NewLine + "Bender's initial perception is:";
-                completeMessage += System.Environment.NewLine + setFrom.startingPerceptions[UnitType.Bender].ToString() + ".";
+
+                foreach(var unit in UnitType.List)
+                {
+                    completeMessage += System.Environment.NewLine + unit.unitName + "'s initial perception is:";
+                    completeMessage += System.Environment.NewLine + setFrom.GetPerception(unit).ToString() + ".";
+                }
             }
             else
             {
-
                 //"Episode #, Step # beginning."
                 startingData = "Starting turn [Episode: " + setFrom.GetEpisodeNumber().ToString() + ", Step: " + setFrom.GetStepNumber().ToString() + "]";
                 startingData += " at position (" + (setFrom.locationInitial.x + 1).ToString() + ", " + (setFrom.locationInitial.y + 1).ToString() + ").";
 
                 initialPerceptData = "Bender's initial perception is: " + System.Environment.NewLine;
-                initialPerceptData += setFrom.startingPerceptions[UnitType.Bender].ToString();
+                initialPerceptData += setFrom.GetPerception(UnitType.Bender).ToString();
 
                 moveBeingAppliedData = "";
 
@@ -79,12 +91,12 @@
                 else
                     moveBeingAppliedData += "The move was greedily chosen." + System.Environment.NewLine;
 
-                if (setFrom.movesThisStep.Count == 0)
-                    moveBeingAppliedData += "No move this turn.";
-                else if (setFrom.movesThisStep[UnitType.Bender] == Move.Grab)
+                //if (setFrom.movesThisStep.Count == 0)
+                //    moveBeingAppliedData += "No move this turn.";
+                if (setFrom.GetUnit(UnitType.Bender).GetMoveThisStep() == Move.Grab)
                     moveBeingAppliedData += "A [Grab] was attempted.";
                 else
-                    moveBeingAppliedData += "A [" + setFrom.movesThisStep[UnitType.Bender].longName + "] was attempted.";
+                    moveBeingAppliedData += "A [" + setFrom.GetUnit(UnitType.Bender).GetMoveThisStep().longName + "] was attempted.";
 
                 //moveresult
                 if(setFrom.resultThisStep != null)
@@ -113,25 +125,27 @@
                 if (setFrom.liveQmatrix.didWeUpdate)
                     qmatrixAdjustmentData = "A q-matrix entry was made for this perception.";
 
-                if (setFrom.movesThisStep.Keys.Count != 0)
-                {
-                    urlData = "Url made a move of " + setFrom.movesThisStep[UnitType.Url].longName + ".";
-                    if (setFrom.boardData.units[UnitType.Url].chasing)
-                        urlData += System.Environment.NewLine + "Url is chasing bender.";
-                    else
-                        urlData += System.Environment.NewLine + "Url is wandering randomly.";
+                urlData = "Url made a move of " + setFrom.GetUnit(UnitType.Url).GetMoveThisStep().longName + ".";
 
+                if(setFrom.urlRandomlyStopped)
+                {
+                    urlData += newline + "Url randomly hit his change to stop chasing this turn.";
                 }
+
+                if (setFrom.startedChasing)
+                    urlData += newline + "Url started chasing Bender.";
+                else if (setFrom.boardData.units[UnitType.Url].chasing)
+                        urlData += System.Environment.NewLine + "Url is chasing bender.";
+                else
+                        urlData += System.Environment.NewLine + "Url is wandering randomly.";
 
 
                 //ending data
-                if(setFrom.benderAttacked)
+                if (setFrom.benderAttacked)
                 {
-                    endingData += "Bender was attacked this turn, and the board was reset.";
+                    endingData += "Bender was attacked this turn, and the board was reset." + newline;
                 }
-                endingData = "Move [" + setFrom.GetStepNumber().ToString() + "] complete.";
-
-                string newline = System.Environment.NewLine;
+                endingData += "Move [" + setFrom.GetStepNumber().ToString() + "] complete.";
 
                 completeMessage = startingData;
                 completeMessage += newline + initialPerceptData;

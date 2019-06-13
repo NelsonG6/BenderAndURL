@@ -13,14 +13,14 @@ namespace BenderAndURL
 
         public string typeName;
 
-        public static readonly HashSet<UnitType> BaseUnits; //A list of units
+        public static readonly HashSet<UnitType> List; //A list of units
 
         public static readonly UnitType Bender;
         public static readonly UnitType Url;
 
         static UnitType()
         {
-            BaseUnits = new HashSet<UnitType>();
+            List = new HashSet<UnitType>();
             Bender = new UnitType();
             Bender.unitName = "Bender";
             Bender.typeName = "Bender";
@@ -28,7 +28,7 @@ namespace BenderAndURL
             Bender.unitMoveList.UnionWith(Move.HorizontalMovesAndGrab);
             Bender.PerceptionCauses = new HashSet<Move>();
             Bender.PerceptionCauses.UnionWith(Move.AllMoves); //Perception comes from any of the 9 possible moves
-            BaseUnits.Add(Bender);
+            List.Add(Bender);
 
             Url = new UnitType();
             Url.unitName = "Url";
@@ -38,7 +38,7 @@ namespace BenderAndURL
             Url.unitMoveList.UnionWith(Move.AllMoves);
             Url.PerceptionCauses = new HashSet<Move>();//perception is caused by any of the 9 possible moves
             Url.PerceptionCauses.UnionWith(Move.AllMoves); //perception is caused by any of the 9 possible moves
-            BaseUnits.Add(Url);
+            List.Add(Url);
 
             Bender.enemy = Url;
         }

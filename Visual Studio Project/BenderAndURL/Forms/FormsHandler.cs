@@ -7,6 +7,8 @@ namespace BenderAndURL
 {
     static class FormsHandler
     {
+        static public bool hasUrlStartedChasing;
+        
         //Initial settings
         static public TextBox number_of_episodes;
         static public TextBox number_of_steps;
@@ -134,11 +136,11 @@ namespace BenderAndURL
             picture_board.ClonePosition(loadedState.boardData); //This copies the state's board over to our PictureSquare board.
 
             //Textboxes update
-            if (AlgorithmState.algorithmStarted) //Only display this if we've started
+            if (AlgorithmManager.algorithmStarted) //Only display this if we've started
             {
                 //This will configure the q-matrix dropdowns properly, and handle if there is no qmatrix as well.
                 //This doesn't affect the stored entries textbox
-                HandleQmatrixForms(loadedState, loadedState.startingPerceptions[UnitType.Bender]);
+                HandleQmatrixForms(loadedState, loadedState.GetPerception(UnitType.Bender));
 
                 //Session progress
                 stepNumber.Text = loadedState.GetStepNumber().ToString();
@@ -163,15 +165,15 @@ namespace BenderAndURL
                 rewardTotal.Text = loadedState.totalRewards.ToString();
 
                 //Update the history episode dropdown
-                if (combobox_history_episodes.Items.Count < AlgorithmState.stateHistory.Count)
-                    combobox_history_episodes.Items.Add(AlgorithmState.stateHistory.Last());
+                if (combobox_history_episodes.Items.Count < AlgorithmManager.stateHistory.Count)
+                    combobox_history_episodes.Items.Add(AlgorithmManager.stateHistory.Last());
 
                 combobox_history_episodes.SelectedIndex = combobox_history_episodes.Items.Count - 1;
 
                 if (!combobox_history_steps.Items.Contains(loadedState) || loadedState.GetStepNumber() == 0)
                 {
                     combobox_history_steps.Items.Clear();
-                    combobox_history_steps.Items.AddRange(AlgorithmState.stateHistory.Last().ToArray());
+                    combobox_history_steps.Items.AddRange(AlgorithmManager.stateHistory.Last().ToArray());
                     combobox_history_steps.Text = loadedState.ToString();
                 }
             }
@@ -191,7 +193,7 @@ namespace BenderAndURL
             DisplayInitialSettings();
 
             //If the algorithm is ended, disable the stepping groupbox.
-            if(AlgorithmState.algorithmEnded == true)
+            if(AlgorithmManager.algorithmEnded == true)
             {
                 groupboxControlProgress.Enabled = false;
             }
@@ -266,7 +268,7 @@ namespace BenderAndURL
                 {
                     list_qmatrixComboboxes[i].Items.Clear();
                     //Cycle through the percepts we gathered for this move's dropdown
-                    foreach (var j in dropdownText_items[i].OrderBy(o => o.percept_data))
+                    foreach (var j in dropdownText_items[i].OrderBy(o => o.perceptData))
                     {
                         list_qmatrixComboboxes[i].Items.Add(j); //I think i can just give my objects a tostring method
                     }
@@ -279,8 +281,8 @@ namespace BenderAndURL
                     qmatrix_stateComboboxLarge.Items.Add(i);
                 }
 
-                if (current_state.liveQmatrix.matrixData.Keys.Contains(current_state.startingPerceptions[UnitType.Bender]))
-                    ViewQmatrixConfiguration(current_state.startingPerceptions[UnitType.Bender]);
+                if (current_state.liveQmatrix.matrixData.Keys.Contains(current_state.GetPerception(UnitType.Bender)))
+                    ViewQmatrixConfiguration(current_state.GetPerception(UnitType.Bender));
                 else
                     ViewQmatrixConfiguration(loadedState.liveQmatrix.matrixData.Keys.First()); //Just grab the first q-matrix item
 
@@ -316,21 +318,18 @@ namespace BenderAndURL
             lock_indexChange_events = false;
         }
 
-        //In response to stop algorithm button being pressed
-        public static void StopAlgorithm(AlgorithmState to_handle)
-        {
-            loadedState = to_handle;
-            to_handle.EraseBoardForReset(); //Special function that creates a new board but keeps bender's position   
-            //clear the board and keep bender 
-            ResetConfiguration(); //Clear comboboxes and other forms
-        }
 
         
 
         //Used after "algorithm reset" button is pressed. Not used during algorithm run.
         static public void ResetConfiguration()
-        {   
-            //This needs to handle the data that is not viewed when the algorithm isn't running
+        {
+            loadedState.InitializeValues(); //Special function that creates a new board but keeps bender's position   
+                                            //clear the board and keep bender 
+                                            //This needs to handle the data that is not viewed when the algorithm isn't running
+
+            loadedState.SetErasedStatus();
+
             lock_indexChange_events = true;
 
             //Clear qmatrix value textboxes
@@ -345,12 +344,14 @@ namespace BenderAndURL
                 i.Clear();
             }
 
-            qmatrix_stateComboboxLarge.Text = "Select a board state...";
+            
 
             foreach (var i in list_qmatrixComboboxes.Values) { i.Items.Clear(); i.Text = ""; }
             foreach (var i in List_qmatrix_valueTextboxes.Values) { i.Clear(); }
 
             lock_indexChange_events = false;
+
+            qmatrix_stateComboboxLarge.Text = "Select a board state...";
 
             combobox_history_steps.Items.Clear();
             combobox_history_steps.Text = "View prior steps...";
@@ -361,6 +362,7 @@ namespace BenderAndURL
             loadedState.liveQmatrix = new Qmatrix();
 
             DisplayState();
+            
         }
 
 
@@ -402,7 +404,7 @@ namespace BenderAndURL
                     to_set.perceptionData[i] = (Percept)list_qmatrixComboboxes[i].SelectedItem;
                 }
 
-                to_set.setName();
+                to_set.SetName();
 
                 //This state may not exist in our q-matrix states, because we only changed one of the dropdowns.
                 //The best solution i think is to make the other dropdowns find the most accurate state.
@@ -414,8 +416,8 @@ namespace BenderAndURL
                 PerceptionState bestPerceptionstate = null;
                 foreach (PerceptionState i in qmatrix_stateComboboxLarge.Items)
                 {
-                    temp = to_set.compare(i);
-                    if (temp > compare_value && i.contains(perceptMove, keepFor_bestFit))
+                    temp = to_set.Compare(i);
+                    if (temp > compare_value && i.Contains(perceptMove, keepFor_bestFit))
                     {
                         bestPerceptionstate = i;
                         compare_value = temp;

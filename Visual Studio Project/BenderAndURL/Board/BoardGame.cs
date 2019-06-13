@@ -42,15 +42,6 @@ namespace BenderAndURL
             ShuffleUnits(); //A fresh board not copied will need randomly generated data, except at program launch. We'll clear it in that case.
         }
 
-        public bool BenderAttacked()
-        {
-            if (GetUnitSquare[UnitType.Bender] == GetUnitSquare[UnitType.Url])
-            {
-                return true;
-            }
-            else return false;
-        }
-
         //Copy constructor, used each new step
         public BoardGame(BoardGame setFrom) : base()
         {
@@ -182,7 +173,7 @@ namespace BenderAndURL
             }
             //Translated: for each move, percieve with this move, and update the perception for this move.
 
-            findPerception.setName();
+            findPerception.SetName();
             units[toFind].perceptionData = findPerception;
         }
 
@@ -236,16 +227,18 @@ namespace BenderAndURL
 
         public MoveResult ApplyMove(UnitType unitToMove, Move moveToApply)
         {
-            GetUnitSquare[unitToMove].visitedState = SquareVisitedState.Last;
+            SquareBoardGame unitSquare = GetUnitSquare[unitToMove];
+            unitSquare.visitedState = SquareVisitedState.Last;
 
             //Get the move result based on the current condition
-            if (GetUnitSquare[unitToMove].CheckIfWallsPreventMove(moveToApply))
+            if (unitSquare.CheckIfWallsPreventMove(moveToApply))
                 return MoveResult.TravelFailed; //Walls prevent move
+
+            if (moveToApply != Move.Wait && units[unitToMove].perceptionData.perceptionData[moveToApply] == Percept.Enemy)
+                return MoveResult.EnemyEncountered;
 
             if(moveToApply == Move.Grab)
             {
-                
-
                 if (GetUnitSquare[unitToMove].beerCanPresent)
                 {
                     BenderCollectsCan();
@@ -258,6 +251,7 @@ namespace BenderAndURL
             //Didn't try to grab a can, and didn't hit a wall. We moved successfully.
 
             MoveUnit(unitToMove, moveToApply);
+            units[unitToMove].SetMoveThisStep(moveToApply);
             return MoveResult.TravelSucceeded;
         }
 
@@ -339,6 +333,12 @@ namespace BenderAndURL
             return (SquareBoardGame)boardData[x][y];
         }
 
+        public SquareBoardBase GetSquareFromMove(SquareBoardBase baseSquare, Move toMove)
+        {
+            int x = baseSquare.x + toMove.gridAdjustment[0];
+            int y = baseSquare.y + toMove.gridAdjustment[1];
+            return boardData[x][y];
+        }
 
     }
 }

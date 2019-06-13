@@ -3,7 +3,7 @@
 namespace BenderAndURL
 {
     //This class is useful for simplifying the q-matrix
-    //This class will manage the list of 5 q moves that are associated with each state in the q-matrix.
+    //This class will manage the list of q moves that are associated with each state in the q-matrix.
     //A valueset is a row of the q matrix.
     class ValueSet
     {

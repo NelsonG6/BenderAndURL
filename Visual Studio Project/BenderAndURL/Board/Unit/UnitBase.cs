@@ -19,7 +19,10 @@ namespace BenderAndURL
         public UnitType enemy;
 
         public int ID; //Used to keep track in debugging
-    
+
+        public PerceptionState startingPerceptionState; //for the status message
+        public Move moveThisStep;
+
         public UnitBase(UnitBase setFrom)
         {            
             unitName = setFrom.unitName;
@@ -30,6 +33,10 @@ namespace BenderAndURL
             enemy = setFrom.enemy;
             ID = setFrom.ID++;
             chasing = setFrom.chasing;
+
+            //Whenever you copy a unit, you know the starting state is the copied unit's most recent perception
+            startingPerceptionState = setFrom.perceptionData;
+
         }
 
         public UnitBase()
@@ -42,14 +49,29 @@ namespace BenderAndURL
             return perceptionData;
         }
 
-        public Percept getPercept(Move directionToCheck)
+        public Percept GetPercept(Move directionToCheck)
         {
-            return perceptionData.getPercept(directionToCheck);
+            return perceptionData.GetPercept(directionToCheck);
         }
 
         override public string ToString()
         {
             return unitName;
+        }
+
+        public Move GetMoveThisStep()
+        {
+            return moveThisStep;
+        }
+
+        public void SetMoveThisStep(Move toSet)
+        {
+            moveThisStep = toSet;
+        }
+
+        public PerceptionState GetStartingPerceptionState()
+        {
+            return startingPerceptionState;
         }
     }
 }

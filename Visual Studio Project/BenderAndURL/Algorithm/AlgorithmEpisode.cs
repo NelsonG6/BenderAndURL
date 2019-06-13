@@ -1,8 +1,5 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BenderAndURL
 {
@@ -40,7 +37,7 @@ namespace BenderAndURL
             stateHistoryData.Add(toAdd);
         }
 
-        public AlgorithmState[] ToArray()
+        public AlgorithmState [] ToArray()
         {
             return stateHistoryData.ToArray();
         }

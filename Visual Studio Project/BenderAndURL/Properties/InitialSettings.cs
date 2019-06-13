@@ -28,6 +28,8 @@ namespace BenderAndURL
         public static readonly int MoveFailedReward;
         public static readonly int EnemyEncountered;
 
+        public static readonly int URLStopsChasingChance;
+
         static InitialSettings()
         {
             n = .1F; //Epsilon; do we explore or exploit. Random factor for taking a best move or random move.
@@ -53,6 +55,8 @@ namespace BenderAndURL
             MoveSuccessfulReward = 0;
             MoveFailedReward = -5;
             EnemyEncountered = -20;
+
+            URLStopsChasingChance = 5;
     }
 
         //initialize all static classes here

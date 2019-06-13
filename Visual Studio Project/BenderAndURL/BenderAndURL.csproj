@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm\AlgorithmEpisode.cs" />
+    <Compile Include="Algorithm\AlgorithmManager.cs" />
     <Compile Include="Algorithm\AlgorithmState.cs" />
     <Compile Include="Algorithm\Qmatrix.cs" />
     <Compile Include="Algorithm\ValueSet.cs" />
