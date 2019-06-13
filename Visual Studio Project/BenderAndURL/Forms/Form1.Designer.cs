@@ -86,6 +86,7 @@ namespace BenderAndURL
             this.groupboxHistory = new System.Windows.Forms.GroupBox();
             this.comboboxHistorystep = new System.Windows.Forms.ComboBox();
             this.groupboxAlgorithmprogress = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label46 = new System.Windows.Forms.Label();
             this.comboboxDelayms = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -175,7 +176,6 @@ namespace BenderAndURL
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox17 = new System.Windows.Forms.PictureBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupboxInitialsettings.SuspendLayout();
             this.groupboxRewards.SuspendLayout();
             this.groupboxQmatrix.SuspendLayout();
@@ -769,6 +769,17 @@ namespace BenderAndURL
             this.groupboxAlgorithmprogress.TabStop = false;
             this.groupboxAlgorithmprogress.Text = "Control Progress";
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(35, 127);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(145, 21);
+            this.checkBox1.TabIndex = 27;
+            this.checkBox1.Text = "Loop until chasing";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // label46
             // 
             this.label46.AutoSize = true;
@@ -825,19 +836,24 @@ namespace BenderAndURL
             // 
             this.comboboxAdvanceepisodes.FormattingEnabled = true;
             this.comboboxAdvanceepisodes.Items.AddRange(new object[] {
+            "0",
             "1",
             "2",
             "5",
             "10",
             "25",
-            "100"});
+            "50",
+            "100",
+            "500",
+            "1000",
+            "5000"});
             this.comboboxAdvanceepisodes.Location = new System.Drawing.Point(155, 36);
             this.comboboxAdvanceepisodes.Name = "comboboxAdvanceepisodes";
             this.comboboxAdvanceepisodes.Size = new System.Drawing.Size(90, 24);
             this.comboboxAdvanceepisodes.TabIndex = 21;
             this.comboboxAdvanceepisodes.DropDown += new System.EventHandler(this.dropdown_opened);
+            this.comboboxAdvanceepisodes.SelectedIndexChanged += new System.EventHandler(this.comboboxAdvanceepisodes_SelectedIndexChanged);
             this.comboboxAdvanceepisodes.DropDownClosed += new System.EventHandler(this.dropdownClosed);
-            this.comboboxAdvanceepisodes.Click += new System.EventHandler(this.comboboxClickedClearText);
             this.comboboxAdvanceepisodes.Leave += new System.EventHandler(this.comboboxAdvanceepisodesLeave);
             // 
             // comboboxAdvancesteps
@@ -1796,17 +1812,6 @@ namespace BenderAndURL
             this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox5.TabIndex = 27;
             this.pictureBox5.TabStop = false;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(35, 127);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(145, 21);
-            this.checkBox1.TabIndex = 27;
-            this.checkBox1.Text = "Loop until chasing";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // Form1
             // 

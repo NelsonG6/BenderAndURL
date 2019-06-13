@@ -508,5 +508,10 @@ namespace BenderAndURL
             comboboxAdvancesteps.Enabled = !comboboxAdvancesteps.Enabled;
             comboboxAdvanceepisodes.Enabled = !comboboxAdvanceepisodes.Enabled;
         }
+
+        private void comboboxAdvanceepisodes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

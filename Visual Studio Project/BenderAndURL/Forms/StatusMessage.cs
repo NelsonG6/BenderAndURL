@@ -142,9 +142,7 @@
 
                 //ending data
                 if (setFrom.benderAttacked)
-                {
                     endingData += "Bender was attacked this turn, and the board was reset." + newline;
-                }
                 endingData += "Move [" + setFrom.GetStepNumber().ToString() + "] complete.";
 
                 completeMessage = startingData;
@@ -157,7 +155,6 @@
                 completeMessage += newline + urlData;
                 completeMessage += newline + qmatrixAdjustmentData;
                 completeMessage += newline + endingData;
-
             }
         }
 
