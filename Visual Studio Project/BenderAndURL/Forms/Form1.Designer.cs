@@ -176,6 +176,7 @@ namespace BenderAndURL
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox17 = new System.Windows.Forms.PictureBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.groupboxInitialsettings.SuspendLayout();
             this.groupboxRewards.SuspendLayout();
             this.groupboxQmatrix.SuspendLayout();
@@ -951,6 +952,7 @@ namespace BenderAndURL
             // groupboxConfiguration
             // 
             this.groupboxConfiguration.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.groupboxConfiguration.Controls.Add(this.checkBox2);
             this.groupboxConfiguration.Controls.Add(this.groupBox1);
             this.groupboxConfiguration.Controls.Add(this.button10);
             this.groupboxConfiguration.Controls.Add(this.buttonStartAlgorithm);
@@ -1813,6 +1815,18 @@ namespace BenderAndURL
             this.pictureBox5.TabIndex = 27;
             this.pictureBox5.TabStop = false;
             // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Location = new System.Drawing.Point(36, 512);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(142, 21);
+            this.checkBox2.TabIndex = 68;
+            this.checkBox2.Text = "Include adversary";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -2049,6 +2063,7 @@ namespace BenderAndURL
         private Button buttonStop;
         private PictureBox pictureBox4;
         private CheckBox checkBox1;
+        private CheckBox checkBox2;
     }
 }
 
