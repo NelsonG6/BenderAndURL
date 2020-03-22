@@ -22,7 +22,7 @@ namespace BenderAndURL
             //Second entry point of the program.
             //When the form loads, we'll create some pictureboxes, that will function as the robot world grid.            
 
-            FormsHandler.load();
+            FormsHandler.Load();
             PictureBox picturebox_inProgress; //Temporary picturebox
             SquareBoardDisplay squareTo_build; //This is object inherits from boardSquare, but has a picture element.
 
@@ -36,8 +36,8 @@ namespace BenderAndURL
                     squareTo_build = new SquareBoardDisplay(i, j);
                     picturebox_inProgress.Name = i.ToString() + "-" + j.ToString(); //Each name is the coordinate
                     picturebox_inProgress.Location =
-                        new Point(  InitialSettings.X_Offset + (i * InitialSettings.EdgeLength),
-                                    InitialSettings.Y_Offset + (j * InitialSettings.EdgeLength));
+                        new Point(  InitialSettings.XOffset + (i * InitialSettings.EdgeLength),
+                                    InitialSettings.YOffset + (j * InitialSettings.EdgeLength));
                     picturebox_inProgress.Size = new Size(InitialSettings.EdgeLength, InitialSettings.EdgeLength);
                     picturebox_inProgress.SizeMode = PictureBoxSizeMode.StretchImage;
                     picturebox_inProgress.BackgroundImageLayout = ImageLayout.Stretch;
@@ -50,58 +50,58 @@ namespace BenderAndURL
             //Called from the restart button, but works here on initial launch.
             //This triggers the constructor for algorithm manager, as well
 
-            textboxStatus.Text = "Program launched.";
+            RichTextboxStatusMessage.Text = "Program launched.";
             
             FormsHandler.DisplayState(); //First time we display the board.
         }
 
-        private void change_enabled_setting()
+        private void ChangeEnabledSetting()
         {
             //Buttons
-            buttonStartAlgorithm.Enabled = !buttonStartAlgorithm.Enabled;
-            buttonRestart.Enabled = !buttonRestart.Enabled;
+            ButtonConfigurationStartAlgorithm.Enabled = !ButtonConfigurationStartAlgorithm.Enabled;
+            ButtonStopAlgorithm.Enabled = !ButtonStopAlgorithm.Enabled;
 
             //Groupboxes
             //Left side
-            groupboxConfiguration.Enabled = !groupboxConfiguration.Enabled;
-            groupboxAlgorithmprogress.Enabled = !groupboxAlgorithmprogress.Enabled;
+            GroupboxConfiguration.Enabled = !GroupboxConfiguration.Enabled;
+            GroupboxAlgorithmProgress.Enabled = !GroupboxAlgorithmProgress.Enabled;
 
             //Right side
-            groupboxQmatrix.Enabled = !groupboxQmatrix.Enabled;
-            groupboxSessionprogress.Enabled = !groupboxSessionprogress.Enabled;
-            groupboxHistory.Enabled = !groupboxHistory.Enabled;
+            GroupboxQmatrix.Enabled = !GroupboxQmatrix.Enabled;
+            GroupboxSessionProgress.Enabled = !GroupboxSessionProgress.Enabled;
+            GroupboxHistory.Enabled = !GroupboxHistory.Enabled;
         }
 
-        private void startAlgorithm(object sender, EventArgs e)
+        private void StartAlgorithm(object sender, EventArgs e)
         {
-            change_enabled_setting(); //Toggle controls
+            ChangeEnabledSetting(); //Toggle controls
             AlgorithmManager.StartAlgorithm();
 
             FormsHandler.LoadAndDisplayState(AlgorithmManager.GetCurrentState());
         }
 
-        private void restartAlgorithm_buttonClick(object sender, EventArgs e)
+        private void RestartAlgorithmButtonClicked(object sender, EventArgs e)
         {
-            FormsHandler.loadedState = AlgorithmManager.GetCurrentState();
+            FormsHandler.LoadedState = AlgorithmManager.GetCurrentState();
             AlgorithmManager.EraseBoard();
             
             FormsHandler.ResetConfiguration(); //Clear comboboxes and other forms
-            change_enabled_setting(); //Togle controls
+            ChangeEnabledSetting(); //Togle controls
         }
 
         //Advance algorithm button
-        async private void buttonAdvancestepsdropdownClick(object sender, EventArgs e)
+        async private void ButtonAdvanceStepsComboboxClicked(object sender, EventArgs e)
         {
-            FormsHandler.halted = false;
-            int stepsToTake = Int32.Parse(comboboxAdvancesteps.Text);
-            int episodes = Int32.Parse(comboboxAdvanceepisodes.Text);
+            FormsHandler.Halted = false;
+            int stepsToTake = Int32.Parse(ComboboxAdvanceSteps.Text);
+            int episodes = Int32.Parse(ComboboxAdvanceEpisodes.Text);
             if (episodes > 0)
-                stepsToTake += (Int32.Parse(comboboxAdvanceepisodes.Text) * FormsHandler.loadedState.GetStepLimit()) + 1; //+1 to get the new episode generated
+                stepsToTake += (Int32.Parse(ComboboxAdvanceEpisodes.Text) * FormsHandler.LoadedState.GetStepLimit()) + 1; //+1 to get the new episode generated
 
-            int initial_delay = Int32.Parse(comboboxDelayms.Text);
+            int initial_delay = Int32.Parse(ComboboxDelayMS.Text);
             int delay = initial_delay;
 
-            if(checkBox1.Checked)
+            if(CheckboxLoopUntilChasing.Checked)
             {
                 FormsHandler.hasUrlStartedChasing = true;
             }
@@ -119,25 +119,25 @@ namespace BenderAndURL
 
             else if(stepsToTake > 1)
             {
-                textboxProgresssteps.Text = stepsToTake.ToString();
-                groupboxCountdown.Enabled = true;
-                groupboxAlgorithmprogress.Enabled = false;
-                groupboxHistory.Enabled = false;
-                while (stepsToTake-- > 0 && !FormsHandler.halted)
+                TextboxInProgressSteps.Text = stepsToTake.ToString();
+                GroupboxCountDown.Enabled = true;
+                GroupboxAlgorithmProgress.Enabled = false;
+                GroupboxHistory.Enabled = false;
+                while (stepsToTake-- > 0 && !FormsHandler.Halted)
                 {
                     AlgorithmManager.StepPrepare();
                     FormsHandler.LoadAndDisplayState(AlgorithmManager.GetCurrentState());
-                    textboxProgresssteps.Text = stepsToTake.ToString();
+                    TextboxInProgressSteps.Text = stepsToTake.ToString();
                     do
                     {
                         await Task.Delay(1);
-                        textboxCountdown.Text = delay.ToString();
-                    } while (--delay > 0 && !FormsHandler.halted);
+                        TextboxInProgressTime.Text = delay.ToString();
+                    } while (--delay > 0 && !FormsHandler.Halted);
                     delay = initial_delay;
                 }
-                groupboxAlgorithmprogress.Enabled = true;
-                groupboxCountdown.Enabled = false;
-                groupboxHistory.Enabled = true;
+                GroupboxAlgorithmProgress.Enabled = true;
+                GroupboxCountDown.Enabled = false;
+                GroupboxHistory.Enabled = true;
             }
 
             else
@@ -148,11 +148,11 @@ namespace BenderAndURL
             
         }
 
-        private void set_episodeFrom_dropdown(object sender, EventArgs e)
+        private void SetEpisodeFromCombobox(object sender, EventArgs e)
         {
-            bool success = Int32.TryParse(comboboxEpisode.Text, out int result);
+            bool success = Int32.TryParse(ComboboxConfigurationNumberOfEpisodes.Text, out int result);
             if (!success)
-                comboboxEpisode.Text = "Invalid.";
+                ComboboxConfigurationNumberOfEpisodes.Text = "Invalid.";
             else
             {
                 Qmatrix.episodeLimit = result;
@@ -160,11 +160,11 @@ namespace BenderAndURL
             }
         }
 
-        private void set_stepsFrom_dropdown(object sender, EventArgs e)
+        private void SetStepsFromCombobox(object sender, EventArgs e)
         {
-            bool success = Int32.TryParse(comboboxSteps.Text, out int result);
+            bool success = Int32.TryParse(ComboboxConfigurationNumberOfStepsPerEpisode.Text, out int result);
             if (!success)
-                comboboxSteps.Text = "Invalid.";
+                ComboboxConfigurationNumberOfStepsPerEpisode.Text = "Invalid.";
             else
             {
                 Qmatrix.stepLimit = result;
@@ -172,97 +172,100 @@ namespace BenderAndURL
             }
         }
 
-        private void setNFrom_dropdown(object sender, EventArgs e)
+        private void SetEtaFromCombobox(object sender, EventArgs e)
         {
 
-            bool success = double.TryParse(comboboxN.Text, out double result);
+            bool success = double.TryParse(ComboboxConfigurationEta.Text, out double result);
             if (!success)
-                comboboxN.Text = "Invalid.";
+                ComboboxConfigurationEta.Text = "Invalid.";
             else
             {
-                FormsHandler.loadedState.liveQmatrix.n = result;
+                FormsHandler.LoadedState.LiveQmatrix.Eta = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
 
-        private void setYFrom_dropdown(object sender, EventArgs e)
+        private void SetYFromCombobox(object sender, EventArgs e)
         {
-            bool success = double.TryParse(comboboxY.Text, out double result);
+            bool success = double.TryParse(ComboboxConfigurationGamma.Text, out double result);
             if (!success)
-                comboboxY.Text = "Invalid.";
+                ComboboxConfigurationGamma.Text = "Invalid.";
             else
             {
-                FormsHandler.loadedState.liveQmatrix.y = result;
+                FormsHandler.LoadedState.LiveQmatrix.Gamma = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
 
-        private void advance_one_step(object sender, EventArgs e)
+        /*
+        private void AdvanceOneStep(object sender, EventArgs e)
         {
 
         }
+        */
 
-        private void button2Click(object sender, EventArgs e)
+        private void ComboboxConfigurationEpsilonClicked(object sender, EventArgs e)
         {
-            bool success = double.TryParse(comboboxE.Text, out double result);
+            bool success = double.TryParse(ComboboxConfigurationEpsilon.Text, out double result);
             if (!success)
-                comboboxE.Text = "Invalid.";
+                ComboboxConfigurationEpsilon.Text = "Invalid.";
             else
             {
-                FormsHandler.loadedState.liveQmatrix.e = result;
+                FormsHandler.LoadedState.LiveQmatrix.Epsilon = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
 
-        private void button4Click(object sender, EventArgs e)
+        private void ComboboxRewardsRanIntoWallClicked(object sender, EventArgs e)
         {
-            bool success = double.TryParse(comboboxWallpunishment.Text, out double result);
+            bool success = double.TryParse(ComboboxRewardsRanIntoWall.Text, out double result);
             if (!success)
-                comboboxWallpunishment.Text = "Invalid.";
+                ComboboxRewardsRanIntoWall.Text = "Invalid.";
             else
             {
-                MoveResult.list[MoveResult.TravelFailed] = result;
+                MoveResult.TravelFailed.Value = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
 
+        /*
         private void button5Click(object sender, EventArgs e)
         {
-            bool success = double.TryParse(comboboxEmptysquare.Text, out double result);
+            bool success = double.TryParse(ComboboxRewardsGrabbedEmptySquare.Text, out double result);
             if (!success)
-                comboboxEmptysquare.Text = "Invalid.";
+                ComboboxRewardsGrabbedEmptySquare.Text = "Invalid.";
             else
             {
-                MoveResult.list[MoveResult.CanMissing] = result;
+                MoveResult.CanMissing.Value = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
-
-        private void button8Click(object sender, EventArgs e)
+        */
+        private void ComboboxRewardsCollectedBeerClicked(object sender, EventArgs e)
         {
-            bool success = double.TryParse(comboboxBeer.Text, out double result);
+            bool success = double.TryParse(ComboboxRewardsCollectedBeer.Text, out double result);
             if (!success)
-                comboboxBeer.Text = "Invalid.";
+                ComboboxRewardsCollectedBeer.Text = "Invalid.";
             else
             {
-                MoveResult.list[MoveResult.CanCollected] = result;
+                MoveResult.CanCollected.Value = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
 
-        private void resetConfig_buttonClick(object sender, EventArgs e)
+        private void ResetConfigButtonClicked(object sender, EventArgs e)
         {
             FormsHandler.ResetConfiguration();
         }
 
-        private void button1Click(object sender, EventArgs e)
+        private void ComboboxRewardsMovedWithoutHittingWallClicked(object sender, EventArgs e)
         {
-            bool success = double.TryParse(comboboxMovedwithoutwall.Text, out double result);
+            bool success = double.TryParse(ComboboxRewardsMovedWithoutHittingWall.Text, out double result);
             if (!success)
-                comboboxMovedwithoutwall.Text = "Invalid.";
+                ComboboxRewardsMovedWithoutHittingWall.Text = "Invalid.";
             else
             {
-                MoveResult.list[MoveResult.TravelSucceeded] = result;
+                MoveResult.TravelSucceeded.Value = result;
                 FormsHandler.DisplayInitialSettings();
             }
         }
@@ -271,7 +274,7 @@ namespace BenderAndURL
         {
             if (e.KeyChar == 13)
             {
-                set_episodeFrom_dropdown(sender, e);
+                SetEpisodeFromCombobox(sender, e);
             }  
         }
 
@@ -279,7 +282,7 @@ namespace BenderAndURL
         {
             if (e.KeyChar == 13)
             {
-                set_stepsFrom_dropdown(sender, e);
+                SetStepsFromCombobox(sender, e);
             }
         }
 
@@ -287,7 +290,7 @@ namespace BenderAndURL
         {
             if (e.KeyChar == 13)
             {
-                setNFrom_dropdown(sender, e);
+                SetEtaFromCombobox(sender, e);
             }
         }
 
@@ -295,7 +298,7 @@ namespace BenderAndURL
         {
             if (e.KeyChar == 13)
             {
-                setYFrom_dropdown(sender, e);
+                SetYFromCombobox(sender, e);
             }
         }
 
@@ -303,7 +306,7 @@ namespace BenderAndURL
         {
             if (e.KeyChar == 13)
             {
-                button2Click(sender, e);
+                ComboboxConfigurationEpsilonClicked(sender, e);
             }
         }
 
@@ -311,7 +314,7 @@ namespace BenderAndURL
         {
             if (e.KeyChar == 13)
             {
-                button8Click(sender, e);
+                ComboboxRewardsCollectedBeerClicked(sender, e);
             }
         }
 
@@ -325,12 +328,12 @@ namespace BenderAndURL
 
         private void button6Click(object sender, EventArgs e)
         {
-            bool success = double.TryParse(comboboxEmptysquare.Text, out double result);
+            bool success = double.TryParse(ComboboxRewardsGrabbedEmptySquare.Text, out double value);
             if (!success)
-                comboboxEmptysquare.Text = "Invalid.";
+                ComboboxRewardsGrabbedEmptySquare.Text = "Invalid.";
             else
             {
-                MoveResult.list[MoveResult.CanMissing] = result;
+                MoveResult.CanMissing.Value = value;
                 FormsHandler.DisplayInitialSettings();
             }
         }
@@ -339,7 +342,7 @@ namespace BenderAndURL
         {
             if (e.KeyChar == 13)
             {
-                button4Click(sender, e);
+                ComboboxRewardsRanIntoWallClicked(sender, e);
             }
         }
 
@@ -347,27 +350,27 @@ namespace BenderAndURL
         {
             if (e.KeyChar == 13)
             {
-                button1Click(sender, e);
+                ComboboxRewardsMovedWithoutHittingWallClicked(sender, e);
             }
         }
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (comboboxEpisode.Text == "Invalid.")
-                comboboxEpisode.Text = "";
+            if (ComboboxConfigurationNumberOfEpisodes.Text == "Invalid.")
+                ComboboxConfigurationNumberOfEpisodes.Text = "";
         }
 
         private void qmatrix_small_dropdownChanged(object sender, EventArgs e)
         {
-            if (!FormsHandler.lock_indexChange_events && ((ComboBox)sender).SelectedIndex > -1)
+            if (!FormsHandler.LockIndexChangeEvents && ((ComboBox)sender).SelectedIndex > -1)
                 if (((ComboBox)sender).SelectedText != "None.") 
-                FormsHandler.small_dropdownChanged((ComboBox)sender);
+                FormsHandler.SmallDropdownChanged((ComboBox)sender);
         }
 
         private void comboboxQmatrixselect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!FormsHandler.lock_indexChange_events && ((ComboBox)sender).SelectedIndex > -1)
-                FormsHandler.large_dropdownChanged();
+            if (!FormsHandler.LockIndexChangeEvents && ((ComboBox)sender).SelectedIndex > -1)
+                FormsHandler.LargeDropdownChanged();
         }
 
         private void comboboxClickedClearText(object sender, EventArgs e)
@@ -387,28 +390,28 @@ namespace BenderAndURL
 
         private void comboboxAdvancestepsLeave(object sender, EventArgs e)
         {
-            bool success = Int32.TryParse(comboboxAdvancesteps.Text, out int result);
+            bool success = Int32.TryParse(ComboboxAdvanceSteps.Text, out int result);
             if (!success || result < 1)
             {
-                if (Int32.Parse(comboboxAdvanceepisodes.Text) > 0)
-                    comboboxAdvancesteps.Text = "0";
+                if (Int32.Parse(ComboboxAdvanceEpisodes.Text) > 0)
+                    ComboboxAdvanceSteps.Text = "0";
                 else
-                    comboboxAdvancesteps.Text = "1";
+                    ComboboxAdvanceSteps.Text = "1";
             }
             else            
-                comboboxAdvancesteps.Text = result.ToString();
+                ComboboxAdvanceSteps.Text = result.ToString();
 
                 
         }
 
         private void comboboxAdvanceepisodesLeave(object sender, EventArgs e)
         {
-            bool success = Int32.TryParse(comboboxAdvanceepisodes.Text, out int result);
+            bool success = Int32.TryParse(ComboboxAdvanceEpisodes.Text, out int result);
             if (!success || result < 0)
             {
-                comboboxAdvanceepisodes.Text = "0";
-                if (Int32.Parse(comboboxAdvancesteps.Text) == 0)
-                    comboboxAdvancesteps.Text = "1";
+                ComboboxAdvanceEpisodes.Text = "0";
+                if (Int32.Parse(ComboboxAdvanceSteps.Text) == 0)
+                    ComboboxAdvanceSteps.Text = "1";
 
 
             }
@@ -416,18 +419,18 @@ namespace BenderAndURL
 
         private void comboboxDelaymsLeave(object sender, EventArgs e)
         {
-            bool success = Int32.TryParse(comboboxDelayms.Text, out int result);
+            bool success = Int32.TryParse(ComboboxDelayMS.Text, out int result);
             if (!success || result < 0)
-                comboboxDelayms.Text = InitialSettings.MS_Delay.ToString();
+                ComboboxDelayMS.Text = InitialSettings.MsDelay.ToString();
             else
-                comboboxDelayms.Text = result.ToString();
+                ComboboxDelayMS.Text = result.ToString();
         }
 
         private void buttonStopClick(object sender, EventArgs e)
         {
-            FormsHandler.halted = true;
-            groupboxAlgorithmprogress.Enabled = true;
-            groupboxCountdown.Enabled = false;
+            FormsHandler.Halted = true;
+            GroupboxAlgorithmProgress.Enabled = true;
+            GroupboxCountDown.Enabled = false;
         }
 
         private void history_indexChanged(object sender, EventArgs e)
@@ -435,13 +438,13 @@ namespace BenderAndURL
             ComboBox sender_box = (ComboBox)sender;
             if (sender_box.SelectedIndex > -1)
             {
-                comboboxHistorystep.Items.Clear();
+                ComboboxHistoryStep.Items.Clear();
 
                 AlgorithmEpisode to_display = (AlgorithmEpisode)sender_box.SelectedItem;
-                comboboxHistorystep.Items.AddRange(to_display.stateHistoryData.ToArray());
-                comboboxHistorystep.SelectedIndex = 0;
+                ComboboxHistoryStep.Items.AddRange(to_display.stateHistoryData.ToArray());
+                ComboboxHistoryStep.SelectedIndex = 0;
 
-                AlgorithmState stateTo_display = (AlgorithmState)comboboxHistorystep.Items[0];
+                AlgorithmState stateTo_display = (AlgorithmState)ComboboxHistoryStep.Items[0];
                 FormsHandler.LoadAndDisplayState(stateTo_display);
             }
         }
@@ -460,18 +463,18 @@ namespace BenderAndURL
         private void dropdownClosedNumberepisodes(object sender, EventArgs e)
         {
             
-            set_episodeFrom_dropdown(sender, e);
+            SetEpisodeFromCombobox(sender, e);
         }
 
         private void comboboxHistoryepisode_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 13)
             {
-                bool success = Int32.TryParse(comboboxHistoryepisode.Text, out int result);
-                if (!success || result < 1 || result > comboboxHistoryepisode.Items.Count)
-                    comboboxHistoryepisode.Text = "Invalid.";
+                bool success = Int32.TryParse(ComboboxHistoryEpisode.Text, out int result);
+                if (!success || result < 1 || result > ComboboxHistoryEpisode.Items.Count)
+                    ComboboxHistoryEpisode.Text = "Invalid.";
                 else
-                    comboboxHistoryepisode.SelectedIndex = result - 1;
+                    ComboboxHistoryEpisode.SelectedIndex = result - 1;
             }
         }
 
@@ -479,13 +482,13 @@ namespace BenderAndURL
         {
             if (e.KeyChar == 13)
             {
-                bool success = Int32.TryParse(comboboxHistorystep.Text, out int result);
-                if (!success || result < 1 || result > comboboxHistorystep.Items.Count)
-                    comboboxHistorystep.Text = "Invalid.";
+                bool success = Int32.TryParse(ComboboxHistoryStep.Text, out int result);
+                if (!success || result < 1 || result > ComboboxHistoryStep.Items.Count)
+                    ComboboxHistoryStep.Text = "Invalid.";
                 else
                 {
-                    comboboxHistorystep.SelectedIndex = result;
-                    FormsHandler.LoadAndDisplayState((AlgorithmState)comboboxHistorystep.SelectedItem);
+                    ComboboxHistoryStep.SelectedIndex = result;
+                    FormsHandler.LoadAndDisplayState((AlgorithmState)ComboboxHistoryStep.SelectedItem);
                 }
                     
             }
@@ -495,18 +498,18 @@ namespace BenderAndURL
         {
             if (e.KeyChar == 13)
             {
-                bool success = Int32.TryParse(comboboxDelayms.Text, out int result);
-                if (!success || result < InitialSettings.MS_Delay)
-                    comboboxDelayms.Text = InitialSettings.MS_Delay.ToString();
+                bool success = Int32.TryParse(ComboboxDelayMS.Text, out int result);
+                if (!success || result < InitialSettings.MsDelay)
+                    ComboboxDelayMS.Text = InitialSettings.MsDelay.ToString();
                 else
-                    comboboxDelayms.Text = result.ToString();
+                    ComboboxDelayMS.Text = result.ToString();
             }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            comboboxAdvancesteps.Enabled = !comboboxAdvancesteps.Enabled;
-            comboboxAdvanceepisodes.Enabled = !comboboxAdvanceepisodes.Enabled;
+            ComboboxAdvanceSteps.Enabled = !ComboboxAdvanceSteps.Enabled;
+            ComboboxAdvanceEpisodes.Enabled = !ComboboxAdvanceEpisodes.Enabled;
         }
 
         private void comboboxAdvanceepisodes_SelectedIndexChanged(object sender, EventArgs e)

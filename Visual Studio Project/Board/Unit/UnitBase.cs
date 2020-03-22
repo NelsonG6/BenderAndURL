@@ -7,7 +7,7 @@ namespace BenderAndURL
     //This is used for individual instances of the units, for tracking in history and debugging
     class UnitBase
     {
-        public PerceptionState perceptionData; //Store the percepts for this unit
+        public PerceptionState PerceptionData; //Store the percepts for this unit
 
         public SquareBoardGame currentLocation;
         public SquareBoardGame previousLocation;
@@ -26,7 +26,7 @@ namespace BenderAndURL
         public UnitBase(UnitBase setFrom)
         {            
             unitName = setFrom.unitName;
-            perceptionData = setFrom.perceptionData;
+            PerceptionData = setFrom.PerceptionData;
             currentLocation = setFrom.currentLocation;
             previousLocation = setFrom.previousLocation;
 
@@ -35,7 +35,7 @@ namespace BenderAndURL
             chasing = setFrom.chasing;
 
             //Whenever you copy a unit, you know the starting state is the copied unit's most recent perception
-            startingPerceptionState = setFrom.perceptionData;
+            startingPerceptionState = setFrom.PerceptionData;
 
         }
 
@@ -46,12 +46,12 @@ namespace BenderAndURL
 
         public PerceptionState GetPerceptionState()
         {
-            return perceptionData;
+            return PerceptionData;
         }
 
         public Percept GetPercept(Move directionToCheck)
         {
-            return perceptionData.GetPercept(directionToCheck);
+            return PerceptionData.GetPercept(directionToCheck);
         }
 
         override public string ToString()

@@ -8,7 +8,7 @@ namespace BenderAndURL
         public Dictionary<UnitType, SquareBoardGame> GetUnitSquare;
 
         //This units on the board
-        public Dictionary<UnitType, UnitBase> units;
+        public Dictionary<UnitType, UnitBase> Units;
 
         public BoardGame() : base()
         {
@@ -17,11 +17,11 @@ namespace BenderAndURL
             int y = 0;
 
             //Bender location will be set in shuffle
-            units = new Dictionary<UnitType, UnitBase>();
-            units.Add(UnitType.Bender, new UnitBase(UnitType.Bender));
-            units.Add(UnitType.Url, new UnitBase(UnitType.Url));
+            Units = new Dictionary<UnitType, UnitBase>();
+            Units.Add(UnitType.Bender, new UnitBase(UnitType.Bender));
+            Units.Add(UnitType.Url, new UnitBase(UnitType.Url));
 
-            foreach (var i in boardData)
+            foreach (var i in BoardData)
             {
                 y = 0;
                 while (i.Count < InitialSettings.SizeOfBoard)
@@ -34,7 +34,7 @@ namespace BenderAndURL
             AddWalls();
 
             GetUnitSquare = new Dictionary<UnitType, SquareBoardGame>();
-            foreach(var i in units)
+            foreach(var i in Units)
             {
                 GetUnitSquare.Add(i.Key, null); //Initialize the list so its easier to update later
             }
@@ -51,19 +51,19 @@ namespace BenderAndURL
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    boardData[i].Add(new SquareBoardGame((SquareBoardGame)setFrom.boardData[i][j]));
-                    if (boardData[i][j].visitedState == SquareVisitedState.Last && !boardData[i][j].UnitsPresent[UnitType.Bender])
-                        boardData[i][j].visitedState = SquareVisitedState.Explored;
+                    BoardData[i].Add(new SquareBoardGame((SquareBoardGame)setFrom.BoardData[i][j]));
+                    if (BoardData[i][j].visitedState == SquareVisitedState.Last && !BoardData[i][j].UnitsPresent[UnitType.Bender])
+                        BoardData[i][j].visitedState = SquareVisitedState.Explored;
                 }
             }
 
             AddWalls();
 
-            units = new Dictionary<UnitType, UnitBase>();
+            Units = new Dictionary<UnitType, UnitBase>();
 
-            foreach(var i in setFrom.units)
+            foreach(var i in setFrom.Units)
             {
-                units.Add(i.Key, new UnitBase(i.Value));
+                Units.Add(i.Key, new UnitBase(i.Value));
             }
 
             GetUnitSquare = new Dictionary<UnitType, SquareBoardGame>();
@@ -75,7 +75,7 @@ namespace BenderAndURL
                 x = i.Value.x;
                 y = i.Value.y;
 
-                GetUnitSquare.Add(i.Key, (SquareBoardGame)boardData[x][y]);
+                GetUnitSquare.Add(i.Key, (SquareBoardGame)BoardData[x][y]);
             }
 
         }
@@ -85,7 +85,7 @@ namespace BenderAndURL
         public void ShuffleCansAndUnits()
         {
             //Activate the 50/50 chance for each tile to have beer in it.
-            foreach (var i in boardData)
+            foreach (var i in BoardData)
             {
                 foreach (var j in i)
                 {
@@ -146,8 +146,8 @@ namespace BenderAndURL
 
 
             //Set the unit-to-board translator data locater
-            GetUnitSquare[UnitType.Bender] = (SquareBoardGame)(boardData[benderX][benderY]);
-            GetUnitSquare[UnitType.Url] = (SquareBoardGame)boardData[urlX][urlY];
+            GetUnitSquare[UnitType.Bender] = (SquareBoardGame)(BoardData[benderX][benderY]);
+            GetUnitSquare[UnitType.Url] = (SquareBoardGame)BoardData[urlX][urlY];
 
             //Set the square's unit booleans
             (GetUnitSquare[UnitType.Bender]).UnitsPresent[UnitType.Bender] = true; //Set the square's unit booleans
@@ -160,7 +160,7 @@ namespace BenderAndURL
             UnitPercieves(UnitType.Bender);
             UnitPercieves(UnitType.Url);
 
-            units[UnitType.Url].chasing = false;
+            Units[UnitType.Url].chasing = false;
         }
 
         //This function will give bender perception data from the board
@@ -169,12 +169,12 @@ namespace BenderAndURL
             PerceptionState findPerception = new PerceptionState(toFind);
             foreach (var i in toFind.PerceptionCauses)
             {
-                findPerception.perceptionData[i] = PercieveMove(i, toFind);
+                findPerception.PerceptionData[i] = PercieveMove(i, toFind);
             }
             //Translated: for each move, percieve with this move, and update the perception for this move.
 
             findPerception.SetName();
-            units[toFind].perceptionData = findPerception;
+            Units[toFind].PerceptionData = findPerception;
         }
 
         //Used when the robot moves *only*, otherwise, the perception will be checked from the state of the unit.
@@ -190,7 +190,7 @@ namespace BenderAndURL
                 int percieveX = GetUnitSquare[unitToCheck].x + moveToCheck.gridAdjustment[0];
                 int percieveY = GetUnitSquare[unitToCheck].y + moveToCheck.gridAdjustment[1];
 
-                SquareBoardBase percieveLocation = boardData[percieveX][percieveY];
+                SquareBoardBase percieveLocation = BoardData[percieveX][percieveY];
                 if (percieveLocation.UnitsPresent[unitToCheck.enemy] == true)
                     return Percept.Enemy;
                 if (percieveLocation.beerCanPresent)
@@ -204,7 +204,7 @@ namespace BenderAndURL
         public void ClearCans()
         {
             //Clear all cans
-            foreach (var i in boardData)
+            foreach (var i in BoardData)
             {
                 foreach (var j in i)
                 {
@@ -234,7 +234,7 @@ namespace BenderAndURL
             if (unitSquare.CheckIfWallsPreventMove(moveToApply))
                 return MoveResult.TravelFailed; //Walls prevent move
 
-            if (moveToApply != Move.Wait && units[unitToMove].perceptionData.perceptionData[moveToApply] == Percept.Enemy)
+            if (moveToApply != Move.Wait && Units[unitToMove].PerceptionData.PerceptionData[moveToApply] == Percept.Enemy)
                 return MoveResult.EnemyEncountered;
 
             if(moveToApply == Move.Grab)
@@ -251,7 +251,7 @@ namespace BenderAndURL
             //Didn't try to grab a can, and didn't hit a wall. We moved successfully.
 
             MoveUnit(unitToMove, moveToApply);
-            units[unitToMove].SetMoveThisStep(moveToApply);
+            Units[unitToMove].SetMoveThisStep(moveToApply);
             return MoveResult.TravelSucceeded;
         }
 
@@ -264,7 +264,7 @@ namespace BenderAndURL
             int x = GetUnitSquare[unitToMove].x + moveToMake.gridAdjustment[0];
             int y = GetUnitSquare[unitToMove].y + moveToMake.gridAdjustment[1];            
 
-            GetUnitSquare[unitToMove] = (SquareBoardGame)boardData[x][y];
+            GetUnitSquare[unitToMove] = (SquareBoardGame)BoardData[x][y];
 
             GetUnitSquare[unitToMove].UnitsPresent[unitToMove] = true;
             GetUnitSquare[unitToMove].visitedState = SquareVisitedState.Last;
@@ -281,7 +281,7 @@ namespace BenderAndURL
         public int GetCansRemaining()
         {
             int total = 0;
-            foreach (var i in boardData)
+            foreach (var i in BoardData)
             {
                 foreach(var j in i)
                 {
@@ -295,7 +295,7 @@ namespace BenderAndURL
         //Does this need to add a baseunit?
         public void AddUnit(UnitBase toAdd)
         {
-            units[UnitType.Bender] = toAdd; //I think this removes bender
+            Units[UnitType.Bender] = toAdd; //I think this removes bender
             GetUnitSquare[UnitType.Bender].UnitsPresent[UnitType.Bender] = true;
             //bender added
         }
@@ -304,7 +304,7 @@ namespace BenderAndURL
         {
             //Set all walls to empty first
 
-            foreach(var i in boardData)
+            foreach(var i in BoardData)
             {
                 foreach(var j in i)
                 {
@@ -314,30 +314,30 @@ namespace BenderAndURL
 
             //Add walls, which will replace some of the empty walls.
             //left wall
-            for (int i = 1; i <= 8; i++) { ((SquareBoardGame)boardData[0][i]).walls = Walls.Left; }
+            for (int i = 1; i <= 8; i++) { ((SquareBoardGame)BoardData[0][i]).walls = Walls.Left; }
             //right wall
-            for (int i = 1; i <= 8; i++) { ((SquareBoardGame)boardData[9][i]).walls = Walls.Right; }
+            for (int i = 1; i <= 8; i++) { ((SquareBoardGame)BoardData[9][i]).walls = Walls.Right; }
             //bottom wall
-            for (int i = 1; i <= 8; i++) { ((SquareBoardGame)boardData[i][0]).walls = Walls.Bottom; }
+            for (int i = 1; i <= 8; i++) { ((SquareBoardGame)BoardData[i][0]).walls = Walls.Bottom; }
             //above wall
-            for (int i = 1; i <= 8; i++) { ((SquareBoardGame)boardData[i][9]).walls = Walls.Top; }
+            for (int i = 1; i <= 8; i++) { ((SquareBoardGame)BoardData[i][9]).walls = Walls.Top; }
 
-            ((SquareBoardGame)boardData[0][0]).walls = Walls.BottomLeft;
-            ((SquareBoardGame)boardData[9][9]).walls = Walls.TopRight;
-            ((SquareBoardGame)boardData[0][9]).walls = Walls.TopLeft;
-            ((SquareBoardGame)boardData[9][0]).walls = Walls.BottomRight;
+            ((SquareBoardGame)BoardData[0][0]).walls = Walls.BottomLeft;
+            ((SquareBoardGame)BoardData[9][9]).walls = Walls.TopRight;
+            ((SquareBoardGame)BoardData[0][9]).walls = Walls.TopLeft;
+            ((SquareBoardGame)BoardData[9][0]).walls = Walls.BottomRight;
         }
 
         public new SquareBoardGame GetBoardData(int x, int y)
         {
-            return (SquareBoardGame)boardData[x][y];
+            return (SquareBoardGame)BoardData[x][y];
         }
 
         public SquareBoardBase GetSquareFromMove(SquareBoardBase baseSquare, Move toMove)
         {
             int x = baseSquare.x + toMove.gridAdjustment[0];
             int y = baseSquare.y + toMove.gridAdjustment[1];
-            return boardData[x][y];
+            return BoardData[x][y];
         }
 
     }

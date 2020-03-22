@@ -14,15 +14,15 @@ namespace BenderAndURL
 
         //Perception state is a string with 5 corresponding action-value pairs. Example: { "beer, beer, beer, beer, empty", "left: 5", "right: 5"
         //Moveset is a dictionary of moves to doubles
-        public Dictionary<PerceptionState, ValueSet> matrixData;
+        public Dictionary<PerceptionState, ValueSet> MatrixData;
 
         //The q-matrix does not store any details about what state the board is in, so it must have a state passed to it.
         static double Ybase;
         static double EBase;
 
-        public double n; //eta doesn't really need a non-static variable, but it might change in the future
-        public double y; //discount
-        public double e; //epsilon
+        public double Eta; //eta doesn't really need a non-static variable, but it might change in the future
+        public double Gamma; //discount
+        public double Epsilon; //epsilon
 
         static public int stepLimit;  //limits
         static public int episodeLimit;
@@ -39,13 +39,13 @@ namespace BenderAndURL
         public Qmatrix()
         {
             //This is our q-matrix
-            matrixData = new Dictionary<PerceptionState, ValueSet>();
+            MatrixData = new Dictionary<PerceptionState, ValueSet>();
             didWeUpdate = false;
 
-            e = InitialSettings.e; //Epsilon; do we explore or exploit. Random factor for taking a best move or random move.
-            y = InitialSettings.y; //Gamma; our discounted rate.
-            n = InitialSettings.n; //The learning rate
-            Ybase = InitialSettings.y;
+            Epsilon = InitialSettings.Epsilon; //Epsilon; do we explore or exploit. Random factor for taking a best move or random move.
+            Gamma = InitialSettings.Gamma; //Gamma; our discounted rate.
+            Eta = InitialSettings.Eta; //The learning rate
+            Ybase = InitialSettings.Gamma;
 
             stepLimit = InitialSettings.StepLimit;  //limits
             episodeLimit = InitialSettings.EpisodeLimit;
@@ -55,7 +55,7 @@ namespace BenderAndURL
         static Qmatrix()
         {
             //Default limit
-            EBase = InitialSettings.e;
+            EBase = InitialSettings.Epsilon;
             episodeLimit = InitialSettings.EpisodeLimit;
             stepLimit = InitialSettings.StepLimit;
         }
@@ -63,25 +63,25 @@ namespace BenderAndURL
         public Qmatrix(Qmatrix copyFrom)
         {
             //Copy the q-matrix.
-            matrixData = new Dictionary<PerceptionState, ValueSet>();
-            foreach(var i in copyFrom.matrixData.Keys)
+            MatrixData = new Dictionary<PerceptionState, ValueSet>();
+            foreach(var i in copyFrom.MatrixData.Keys)
             {   //For each list of strings in copy from.matrix data
                 //Get a copy of the dictionary at this list of strings
                 //Should be a deep copy
-                matrixData.Add(i, new ValueSet(copyFrom.matrixData[i]));
+                MatrixData.Add(i, new ValueSet(copyFrom.MatrixData[i]));
             }
             didWeUpdate = copyFrom.didWeUpdate;
             setNumber = copyFrom.setNumber;
             episodeNumber = copyFrom.episodeNumber;
-            n = copyFrom.n;
-            y = copyFrom.y;
-            e = copyFrom.e;
+            Eta = copyFrom.Eta;
+            Gamma = copyFrom.Gamma;
+            Epsilon = copyFrom.Epsilon;
         }
 
         //Determine what the next move to make will be.
         public Move GenerateStep(PerceptionState perceievedState)
         {
-            if (matrixData.Keys.Contains(perceievedState))
+            if (MatrixData.Keys.Contains(perceievedState))
             {
                 //Always generate the step using the state at algorithmManager.GetCurrentState()
                 Dictionary<Move, double> bestPercepts = new Dictionary<Move, double>();
@@ -89,7 +89,7 @@ namespace BenderAndURL
                 
                 //Determine if we will be making a greedy best selection, or a random selection.
                 //e will be a double, possibly very small, but not more than 1.
-                if (MyRandom.Next(1, 101) < e * 100)
+                if (MyRandom.Next(1, 101) < Epsilon * 100)
                 {
                     randomlyMoved = true;
                     //Random move. 
@@ -99,7 +99,7 @@ namespace BenderAndURL
                 {
                     //Greedy selection, then random among best matches.
                     //Loop through the move-double pair, and do a random selection of any move that is tied for best action.
-                    foreach (var i in matrixData[perceievedState].moveList)
+                    foreach (var i in MatrixData[perceievedState].MoveList)
                     {
                         if (bestPercepts.Count == 0)
                             bestPercepts.Add(i.Key, i.Value);
@@ -127,19 +127,19 @@ namespace BenderAndURL
         {
             double oldQmatrixValue = 0;
             //Initial the start of our update value
-            if (matrixData.Keys.Contains(stateToUpdate))
-                oldQmatrixValue = matrixData[stateToUpdate].GetBestValue(); //Whats our old best qmatrix value at our old state?
+            if (MatrixData.Keys.Contains(stateToUpdate))
+                oldQmatrixValue = MatrixData[stateToUpdate].GetBestValue(); //Whats our old best qmatrix value at our old state?
 
             //Whats the best value at the new one?
             double newQmatrixValue = 0;
-            if (matrixData.Keys.Contains(resultState))
-                newQmatrixValue = matrixData[resultState].GetBestValue();
+            if (MatrixData.Keys.Contains(resultState))
+                newQmatrixValue = MatrixData[resultState].GetBestValue();
             double difference = newQmatrixValue - oldQmatrixValue;
 
-            y = (double)Math.Pow(Ybase, setNumber - 1); //y ^ step-1 is the discount factor
-            double discountedDifference = difference * y;
+            Gamma = (double)Math.Pow(Ybase, setNumber - 1); //y ^ step-1 is the discount factor
+            double discountedDifference = difference * Gamma;
             double rewardAdded = discountedDifference + baseReward;
-            double finalValue = n * rewardAdded;
+            double finalValue = Eta * rewardAdded;
 
             didWeUpdate = false; //Status message grabs this later
                                    //check if this state already exists, and add it to our list of states we've encountered, if not.
@@ -147,9 +147,9 @@ namespace BenderAndURL
             if (finalValue != 0)
             {
                 didWeUpdate = true;
-                if (!matrixData.Keys.Contains(stateToUpdate))
-                    matrixData[stateToUpdate] = new ValueSet();
-                matrixData[stateToUpdate][resultMove] = finalValue;
+                if (!MatrixData.Keys.Contains(stateToUpdate))
+                    MatrixData[stateToUpdate] = new ValueSet();
+                MatrixData[stateToUpdate][resultMove] = finalValue;
             }
         }
 
@@ -158,7 +158,7 @@ namespace BenderAndURL
         public List <string> getListOfQmatrixStates()
         {
             List<string> building = new List<string>();
-            foreach (var i in matrixData.Keys.OrderBy(o => o.ID))
+            foreach (var i in MatrixData.Keys.OrderBy(o => o.ID))
             {
                 building.Add(i.ToString());
             }
@@ -171,7 +171,7 @@ namespace BenderAndURL
             setNumber = 0;
             episodeNumber++;
 
-            e -= (EBase / episodeLimit);
+            Epsilon -= (EBase / episodeLimit);
 
         }
     }

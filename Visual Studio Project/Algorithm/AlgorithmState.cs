@@ -7,38 +7,31 @@ namespace BenderAndURL
     class AlgorithmState
     {
 
-        public bool urlRandomlyStopped;
-        public bool startedChasing;
+        public bool UrlRandomlyStopped;
+        public bool StartedChasing;
+        public bool BenderAttacked;
 
-        public bool benderAttacked;
+        public BoardGame BoardData; //Stores the state of the cans and walls (bender is stored with other coordinates)
 
-        //Non-static members
-        public BoardGame boardData; //Stores the state of the cans and walls (bender is stored with other coordinates)
+        private StatusMessage StatusMessage; //Used for debugging
+        public Qmatrix LiveQmatrix; //Moves will be generated from here.
 
-        private StatusMessage statusMessage; //Used for debugging
-        public Qmatrix liveQmatrix; //Moves will be generated from here.
+        public double EpisodeRewards; //Session - Reward data
+        public double TotalRewards;
 
-        public double episodeRewards; //Session - Reward data
-        public double totalRewards;
+        public SquareBoardBase LocationInitial; //Just used for the status message
 
-        public SquareBoardBase locationInitial; //Just used for the status message
+        public MoveResult ResultThisStep; //Moveresult stored for status
 
-        public MoveResult resultThisStep; //Moveresult stored for status
+        public double ObtainedReward; //The raw reward for the action we took
 
-        public double obtainedReward; //The raw reward for the action we took
-
-        public int cansCollected;
-
-
-        //Non-static functions
+        public int CansCollected;
+        
         //Default config algorithm state
         //This is called when the program is launched.
         public AlgorithmState()
         {
-            boardData = new BoardGame(); //Produces a shuffled bender and can-filled board 
-
-
-
+            BoardData = new BoardGame(); //Produces a shuffled bender and can-filled board 
             InitializeValues(); //Gives us some empty defaults
         }
 
@@ -46,8 +39,8 @@ namespace BenderAndURL
         //Just a useful container for resetting some values when we want to start over, but making a new state would have us lose bender's position.
         public void InitializeValues()
         {
-            boardData.ClearCans(); //Clear the board for our initial launch(this doesn't remove bender, just cans)
-            liveQmatrix = new Qmatrix();
+            BoardData.ClearCans(); //Clear the board for our initial launch(this doesn't remove bender, just cans)
+            LiveQmatrix = new Qmatrix();
         }
 
         //Copied from another algorithm state
@@ -55,31 +48,31 @@ namespace BenderAndURL
         //This constructor is called when a new step is being generated, so we transfer some values appropriately.
         public AlgorithmState(AlgorithmState setFrom)
         {
-            cansCollected = setFrom.cansCollected;
+            CansCollected = setFrom.CansCollected;
 
-            episodeRewards = setFrom.episodeRewards; //Reward data
-            totalRewards = setFrom.totalRewards;
+            EpisodeRewards = setFrom.EpisodeRewards; //Reward data
+            TotalRewards = setFrom.TotalRewards;
 
-            boardData = new BoardGame(setFrom.boardData); //Copy the board
+            BoardData = new BoardGame(setFrom.BoardData); //Copy the board
 
             //Increase steps in here
-            liveQmatrix = new Qmatrix(setFrom.liveQmatrix); //Copy the q matrix
+            LiveQmatrix = new Qmatrix(setFrom.LiveQmatrix); //Copy the q matrix
 
             //The initial location will be the resulting location of the last step
-            locationInitial = boardData.GetUnitSquare[UnitType.Bender];            
+            LocationInitial = BoardData.GetUnitSquare[UnitType.Bender];            
 
             //Detect if we reached the limit for this episode
 
 
-            if (liveQmatrix.setNumber == Qmatrix.stepLimit || setFrom.benderAttacked)
-                if (liveQmatrix.episodeNumber == Qmatrix.episodeLimit)
-                    AlgorithmManager.algorithmEnded = true;
+            if (LiveQmatrix.setNumber == Qmatrix.stepLimit || setFrom.BenderAttacked)
+                if (LiveQmatrix.episodeNumber == Qmatrix.episodeLimit)
+                    AlgorithmManager.AlgorithmEnded = true;
                 else
                 {
                     StartNewEpisode();
                 }
             else
-                liveQmatrix.setNumber++;
+                LiveQmatrix.setNumber++;
 
         }
 
@@ -88,14 +81,14 @@ namespace BenderAndURL
         //Here, a step only happens when we have been asked by the manager to *actually* take a step.
         public void Step()
         {
-            boardData.UnitPercieves(UnitType.Url);
-            boardData.UnitPercieves(UnitType.Bender);
+            BoardData.UnitPercieves(UnitType.Url);
+            BoardData.UnitPercieves(UnitType.Bender);
 
-            Move urlFirstMove = null;
+            Move urlFirstMove;
             Move urlSecondMove = null;
-            List<Move> UrlMoves = null;
+            List<Move> UrlMoves;
 
-            Move benderMove = null;
+            Move benderMove;
 
             //Url senses twice. If bender moves into him, he wont start chasing until next turn.
             //This is a pre-bender-move view. this is the view we use 
@@ -105,7 +98,7 @@ namespace BenderAndURL
             //url 
 
             if(GetUnit(UnitType.Url).chasing )
-                foreach (var i in boardData.units[UnitType.Url].perceptionData.perceptionData)
+                foreach (var i in BoardData.Units[UnitType.Url].PerceptionData.PerceptionData)
                 {
                     if (i.Value == Percept.Enemy)
                     {
@@ -118,7 +111,7 @@ namespace BenderAndURL
             //Url move will most likely be a diagonal
 
             //Bender section.
-            benderMove = liveQmatrix.GenerateStep(GetPerception(UnitType.Bender));
+            benderMove = LiveQmatrix.GenerateStep(GetPerception(UnitType.Bender));
             GetUnit(UnitType.Bender).SetMoveThisStep(benderMove); //Store the step for status message
 
 
@@ -126,25 +119,25 @@ namespace BenderAndURL
             //Check if bender chose a move that moves him into url.
             //If bender did not make a move that knocks him into the enemy,
             //Only then should bender move
-            resultThisStep = boardData.ApplyMove(UnitType.Bender, benderMove); //The move should be performed now, if possible.    
+            ResultThisStep = BoardData.ApplyMove(UnitType.Bender, benderMove); //The move should be performed now, if possible.    
 
             //See if URL can attack bender after bender moved
             //In the below section, we see if URL attacks bender, before updating the q matrix.
 
             //Update reward in this section
-            boardData.UnitPercieves(UnitType.Url); //what url sees after bender moves
+            BoardData.UnitPercieves(UnitType.Url); //what url sees after bender moves
             //Previous optimal move is stored in urlFirstMove
 
             if(GetUnit(UnitType.Url).chasing && MyRandom.Next(0, InitialSettings.URLStopsChasingChance) == 0)
             {
-                urlRandomlyStopped = true;
+                UrlRandomlyStopped = true;
                 GetUnit(UnitType.Url).chasing = false;
             }
 
             if (GetUnit(UnitType.Url).chasing)
             {   
                 //Loop through Url's perceptions
-                foreach (var i in boardData.units[UnitType.Url].perceptionData.perceptionData)
+                foreach (var i in BoardData.Units[UnitType.Url].PerceptionData.PerceptionData)
                 {   //Url is already chasing.
                     //See if bender made a bad move, and even though he moves before us,
                     //he didn't avoid us properly
@@ -153,9 +146,9 @@ namespace BenderAndURL
                 }
                 if(urlSecondMove != null)
                 {   //Bender made a bad move. Attack him.
-                    obtainedReward = MoveResult.list[MoveResult.EnemyEncountered];
-                    benderAttacked = true;
-                    resultThisStep = MoveResult.EnemyEncountered;
+                    ObtainedReward = MoveResult.EnemyEncountered.Value;
+                    BenderAttacked = true;
+                    ResultThisStep = MoveResult.EnemyEncountered;
                     urlFirstMove = urlSecondMove;
                 }
                 else
@@ -166,7 +159,7 @@ namespace BenderAndURL
             else
             {   //Url is not chasing. See if after bender moved, we he ran into url.
                 //If so, start chasing.
-                foreach (var i in boardData.units[UnitType.Url].perceptionData.perceptionData)
+                foreach (var i in BoardData.Units[UnitType.Url].PerceptionData.PerceptionData)
                 {
                     if (i.Value == Percept.Enemy)
                     {
@@ -175,7 +168,7 @@ namespace BenderAndURL
                 }
                 if(urlSecondMove != null)
                 {   //We found a move that detects bender. Start chasing.
-                    startedChasing = true;
+                    StartedChasing = true;
                     GetUnit(UnitType.Url).chasing = true;
                     urlFirstMove = Move.Wait;
                 }
@@ -185,7 +178,7 @@ namespace BenderAndURL
                     UrlMoves = new List<Move>();
 
                     //Left off with looping through url's perceptions to find a non-wall, non grab move.
-                    foreach (var i in boardData.units[UnitType.Url].perceptionData.perceptionData)
+                    foreach (var i in BoardData.Units[UnitType.Url].PerceptionData.PerceptionData)
                     {
                         if(i.Value != Percept.Wall && i.Key != Move.Grab && i.Key != Move.Wait && Move.CardinalMoves.Contains(i.Key))
                             UrlMoves.Add(i.Key);
@@ -195,36 +188,36 @@ namespace BenderAndURL
                 }
             }
 
-            obtainedReward = MoveResult.list[resultThisStep]; //Get the reward for this action
+            ObtainedReward = ResultThisStep.Value; //Get the reward for this action
 
-            episodeRewards += obtainedReward; //Update the rewards total
+            EpisodeRewards += ObtainedReward; //Update the rewards total
 
-            if (resultThisStep == MoveResult.CanCollected)
-                ++cansCollected;
+            if (ResultThisStep == MoveResult.CanCollected)
+                ++CansCollected;
 
             //give the value to the q matrix to digest
 
             if (GetStepNumber() == Qmatrix.stepLimit && GetEpisodeNumber() > Qmatrix.episodeLimit)
-                AlgorithmManager.algorithmEnded = true;
+                AlgorithmManager.AlgorithmEnded = true;
 
             if (benderMove == null)
-                boardData.units[UnitType.Url].chasing = false;
+                BoardData.Units[UnitType.Url].chasing = false;
 
             PerceptionState startingState = GetUnit(UnitType.Bender).GetStartingPerceptionState();
-            liveQmatrix.UpdateState(startingState, GetPerception(UnitType.Bender), benderMove, obtainedReward);
+            LiveQmatrix.UpdateState(startingState, GetPerception(UnitType.Bender), benderMove, ObtainedReward);
 
             GetUnit(UnitType.Url).SetMoveThisStep(urlFirstMove); //for status smessage
 
             //Move url
-            if (!benderAttacked)
+            if (!BenderAttacked)
             {
-                boardData.ApplyMove(UnitType.Url, urlFirstMove);
+                BoardData.ApplyMove(UnitType.Url, urlFirstMove);
                 urlFirstMove = null;
 
                 //Now that url moved, detect if he is chasing again.
                 if(GetUnit(UnitType.Url).chasing == false)
                 {
-                    foreach (var i in boardData.units[UnitType.Url].perceptionData.perceptionData)
+                    foreach (var i in BoardData.Units[UnitType.Url].PerceptionData.PerceptionData)
                     {
                         if (i.Value == Percept.Enemy)
                             urlFirstMove = i.Key;
@@ -232,25 +225,17 @@ namespace BenderAndURL
                     if (urlFirstMove != null)
                     {
                         GetUnit(UnitType.Url).chasing = true;
-                        startedChasing = true;
+                        StartedChasing = true;
                     }
                 }
             }
-
-
-
-
 
             //Now that url has moved, see if bender is in view. If so, chase him.
 
             //Make each unit perceieve after their step
             UnitPerceives(UnitType.Bender);
             UnitPerceives(UnitType.Url);
-
-
         }
-
-
 
         //Used to erase session-based progress.
         //This is also called each new episode once we reach the max steps
@@ -259,19 +244,19 @@ namespace BenderAndURL
         {
             
 
-            cansCollected = 0;
-            episodeRewards = 0; //Session - Reward data
+            CansCollected = 0;
+            EpisodeRewards = 0; //Session - Reward data
 
-            boardData.ShuffleCansAndUnits(); //Shuffle the the current board.
+            BoardData.ShuffleCansAndUnits(); //Shuffle the the current board.
 
             //Each unit perceives 
-            foreach(var i in boardData.units.Keys)
+            foreach(var i in BoardData.Units.Keys)
             {
-                boardData.UnitPercieves(i);
+                BoardData.UnitPercieves(i);
             }
 
-            liveQmatrix.ProcessNewEpisode();
-            statusMessage = new StatusMessage(this);
+            LiveQmatrix.ProcessNewEpisode();
+            StatusMessage = new StatusMessage(this);
         }
 
 
@@ -294,48 +279,48 @@ namespace BenderAndURL
 
         public int GetEpisodeNumber()
         {
-            return liveQmatrix.episodeNumber;
+            return LiveQmatrix.episodeNumber;
         }
 
         public int GetStepNumber()
         {
-            return liveQmatrix.setNumber;
+            return LiveQmatrix.setNumber;
         }
 
         public void GenerateStatusMessage()
         {
-            statusMessage = new StatusMessage(this);
+            StatusMessage = new StatusMessage(this);
         }
 
         public string GetStatus()
         {
-            if(statusMessage == null)
+            if(StatusMessage == null)
             {
                 StatusMessage status = new StatusMessage(this);
                 return status.GetMessage();
                 
             }
-            return statusMessage.GetMessage();
+            return StatusMessage.GetMessage();
         }
 
         public void UnitPerceives(UnitType toSee)
         {
-            boardData.UnitPercieves(toSee);
+            BoardData.UnitPercieves(toSee);
         }
 
         public PerceptionState GetPerception(UnitType toSee)
         {
-            return boardData.units[toSee].perceptionData;
+            return BoardData.Units[toSee].PerceptionData;
         }
 
         public UnitBase GetUnit(UnitType toGet)
         {
-            return boardData.units[toGet];
+            return BoardData.Units[toGet];
         }
 
         public void SetErasedStatus()
         {
-            statusMessage = StatusMessage.ErasedMessage;
+            StatusMessage = StatusMessage.ErasedMessage;
         }
     } 
 }

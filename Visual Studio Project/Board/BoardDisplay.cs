@@ -19,16 +19,16 @@ namespace BenderAndURL
             {
                 for (int j = 0; j < InitialSettings.SizeOfBoard; j++)
                 {
-                    boardData[i].Add(new SquareBoardDisplay(i, j));
+                    BoardData[i].Add(new SquareBoardDisplay(i, j));
                 }
             }
         }
 
         public void ClonePosition(BoardBase setFrom)
         {
-            for (int i = 0; i < setFrom.boardData.Count; i++)
+            for (int i = 0; i < setFrom.BoardData.Count; i++)
             {
-                for (int j = 0; j < setFrom.boardData[i].Count; j++)
+                for (int j = 0; j < setFrom.BoardData[i].Count; j++)
                 {
                     GetBoardData(i, j).CopyStatus(setFrom.GetBoardData(i, j));
                 }
@@ -37,7 +37,7 @@ namespace BenderAndURL
 
         public new SquareBoardDisplay GetBoardData(int x, int y)
         {
-            return (SquareBoardDisplay)boardData[x][y];
+            return (SquareBoardDisplay)BoardData[x][y];
         }
     }
 }

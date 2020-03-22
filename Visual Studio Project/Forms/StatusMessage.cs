@@ -53,10 +53,10 @@
             {
                 programLaunchMessage = true;
                 completeMessage = "The program has been launched.\nBender's starting position is (";
-                completeMessage += (setFrom.boardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
-                completeMessage += ", " + (setFrom.boardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
+                completeMessage += (setFrom.BoardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
+                completeMessage += ", " + (setFrom.BoardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
             }
-            else if (!AlgorithmManager.algorithmStarted)
+            else if (!AlgorithmManager.AlgorithmStarted)
 
                 completeMessage = "The board was reset. Progress has been erased.";
 
@@ -66,8 +66,8 @@
                 completeMessage = "A new episode has been created.\n";
                 completeMessage += "Starting turn [Episode: " + setFrom.GetEpisodeNumber().ToString();
                 completeMessage += ", Step: " + setFrom.GetStepNumber().ToString() + "]";
-                completeMessage += " at position (" + (setFrom.boardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
-                completeMessage += ", " + (setFrom.boardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
+                completeMessage += " at position (" + (setFrom.BoardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
+                completeMessage += ", " + (setFrom.BoardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
 
                 foreach(var unit in UnitType.List)
                 {
@@ -79,14 +79,14 @@
             {
                 //"Episode #, Step # beginning."
                 startingData = "Starting turn [Episode: " + setFrom.GetEpisodeNumber().ToString() + ", Step: " + setFrom.GetStepNumber().ToString() + "]";
-                startingData += " at position (" + (setFrom.locationInitial.x + 1).ToString() + ", " + (setFrom.locationInitial.y + 1).ToString() + ").";
+                startingData += " at position (" + (setFrom.LocationInitial.x + 1).ToString() + ", " + (setFrom.LocationInitial.y + 1).ToString() + ").";
 
                 initialPerceptData = "Bender's initial perception is: " + System.Environment.NewLine;
                 initialPerceptData += setFrom.GetPerception(UnitType.Bender).ToString();
 
                 moveBeingAppliedData = "";
 
-                if (setFrom.liveQmatrix.randomlyMoved)
+                if (setFrom.LiveQmatrix.randomlyMoved)
                     moveBeingAppliedData += "A the move was randomly generated." + System.Environment.NewLine;
                 else
                     moveBeingAppliedData += "The move was greedily chosen." + System.Environment.NewLine;
@@ -99,49 +99,49 @@
                     moveBeingAppliedData += "A [" + setFrom.GetUnit(UnitType.Bender).GetMoveThisStep().longName + "] was attempted.";
 
                 //moveresult
-                if(setFrom.resultThisStep != null)
-                moveResultData = "The result of the move was [" + setFrom.resultThisStep.result_data + "].";
+                if(setFrom.ResultThisStep != null)
+                moveResultData = "The result of the move was [" + setFrom.ResultThisStep.Description + "].";
 
                 //The reward from this action was: 
                 string math_sign = "+";
-                if (setFrom.obtainedReward < 0)
+                if (setFrom.ObtainedReward < 0)
                     math_sign = "";
-                rewardData = "The reward for this action was: [" + math_sign + setFrom.obtainedReward.ToString() + "]";
+                rewardData = "The reward for this action was: [" + math_sign + setFrom.ObtainedReward.ToString() + "]";
                 //reward_data + = ", applied to state ";
                 //Add bender perception data in his new location here
 
                 //"Bender's position is:
-                newPositionData = "The resulting position was (" + (setFrom.boardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
-                newPositionData += ", " + (setFrom.boardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
+                newPositionData = "The resulting position was (" + (setFrom.BoardData.GetUnitSquare[UnitType.Bender].x + 1).ToString();
+                newPositionData += ", " + (setFrom.BoardData.GetUnitSquare[UnitType.Bender].y + 1).ToString() + ").";
 
                 //New percept
 
                 newPerceptData = "The percept at the new location is: " + System.Environment.NewLine;
-                newPerceptData += setFrom.boardData.units[UnitType.Bender].perceptionData.ToString() + ".";
+                newPerceptData += setFrom.BoardData.Units[UnitType.Bender].PerceptionData.ToString() + ".";
 
                 //"The calculation used on the q matrix was:"
 
                 qmatrixAdjustmentData = "No qmatrix entry was made.";
-                if (setFrom.liveQmatrix.didWeUpdate)
+                if (setFrom.LiveQmatrix.didWeUpdate)
                     qmatrixAdjustmentData = "A q-matrix entry was made for this perception.";
 
                 urlData = "Url made a move of " + setFrom.GetUnit(UnitType.Url).GetMoveThisStep().longName + ".";
 
-                if(setFrom.urlRandomlyStopped)
+                if(setFrom.UrlRandomlyStopped)
                 {
                     urlData += newline + "Url randomly hit his change to stop chasing this turn.";
                 }
 
-                if (setFrom.startedChasing)
+                if (setFrom.StartedChasing)
                     urlData += newline + "Url started chasing Bender.";
-                else if (setFrom.boardData.units[UnitType.Url].chasing)
+                else if (setFrom.BoardData.Units[UnitType.Url].chasing)
                         urlData += System.Environment.NewLine + "Url is chasing bender.";
                 else
                         urlData += System.Environment.NewLine + "Url is wandering randomly.";
 
 
                 //ending data
-                if (setFrom.benderAttacked)
+                if (setFrom.BenderAttacked)
                     endingData += "Bender was attacked this turn, and the board was reset." + newline;
                 endingData += "Move [" + setFrom.GetStepNumber().ToString() + "] complete.";
 

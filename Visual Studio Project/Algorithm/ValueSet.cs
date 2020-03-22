@@ -8,32 +8,32 @@ namespace BenderAndURL
     class ValueSet
     {
         //5 moves with q-matrix double values associated for each one
-        public Dictionary<Move, double> moveList;
+        public Dictionary<Move, double> MoveList;
 
         public ValueSet()
         {
-            moveList = new Dictionary<Move, double>();
+            MoveList = new Dictionary<Move, double>();
 
             //Build a dictionary with 5 moves, by default
             foreach(var i in Move.HorizontalMovesAndGrab)
             {
-                moveList.Add(i, 0f);
+                MoveList.Add(i, 0f);
             }
         }
 
         public ValueSet(ValueSet setFrom)
         {
-            moveList = new Dictionary<Move, double>();
-            foreach (var i in setFrom.moveList)
+            MoveList = new Dictionary<Move, double>();
+            foreach (var i in setFrom.MoveList)
             {
-                moveList.Add(i.Key, i.Value);
+                MoveList.Add(i.Key, i.Value);
             }
         }
 
         public double GetBestValue()
         {
             double toReturn = 0;
-            foreach (var i in moveList.Values)
+            foreach (var i in MoveList.Values)
             {
                 if (i > toReturn)
                     toReturn = i;
@@ -56,12 +56,12 @@ namespace BenderAndURL
 
         public double GetValue(Move index)
         {
-            return moveList[index];
+            return MoveList[index];
         }
 
         public void SetValue(Move index, double value)
         {
-            moveList[index] = value;
+            MoveList[index] = value;
         }
     }
 }

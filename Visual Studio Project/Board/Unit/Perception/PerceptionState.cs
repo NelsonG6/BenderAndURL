@@ -8,7 +8,7 @@ namespace BenderAndURL
     //This is a state in the sense of, what state is bender in when he perceives his environment
     class PerceptionState : IEquatable<PerceptionState>
     {
-        public SortedDictionary<Move, Percept> perceptionData;
+        public SortedDictionary<Move, Percept> PerceptionData;
 
         public string name_without_id;
         public string nameWithId;
@@ -24,10 +24,10 @@ namespace BenderAndURL
         //to the static type.
         public PerceptionState(UnitType useMovelist)
         {
-            perceptionData = new SortedDictionary<Move, Percept>();
+            PerceptionData = new SortedDictionary<Move, Percept>();
             foreach(var i in useMovelist.PerceptionCauses)
             {
-                perceptionData.Add(i, Percept.Initialized);
+                PerceptionData.Add(i, Percept.Initialized);
             }
 
             ID = IDCount++;
@@ -37,9 +37,9 @@ namespace BenderAndURL
 
         public bool Equals(PerceptionState toCheck)
         {
-            foreach(var i in perceptionData.Keys)
+            foreach(var i in PerceptionData.Keys)
             {
-                if (perceptionData[i] != toCheck.perceptionData[i])
+                if (PerceptionData[i] != toCheck.PerceptionData[i])
                     return false;
             }
             return true;
@@ -54,7 +54,7 @@ namespace BenderAndURL
         {
             foreach(var i in toCheck)
             {
-                if (i.Value != perceptionData[i.Key])
+                if (i.Value != PerceptionData[i.Key])
                     return false;
             }
             return true;
@@ -62,15 +62,15 @@ namespace BenderAndURL
 
         public Percept GetPercept(Move perceptionCause)
         {
-            return perceptionData[perceptionCause];
+            return PerceptionData[perceptionCause];
         }
 
         public PerceptionState(PerceptionState copyFrom)
         {
-            perceptionData = new SortedDictionary<Move, Percept>();
-            foreach (var i in copyFrom.perceptionData)
+            PerceptionData = new SortedDictionary<Move, Percept>();
+            foreach (var i in copyFrom.PerceptionData)
             {
-                perceptionData.Add(i.Key, i.Value);
+                PerceptionData.Add(i.Key, i.Value);
             }
         }
 
@@ -80,9 +80,9 @@ namespace BenderAndURL
 
             string partTwo = "";
 
-            foreach (var i in perceptionData.Keys.OrderBy(o => o.order))
+            foreach (var i in PerceptionData.Keys.OrderBy(o => o.order))
             {
-                partTwo += "[" + i.shortName + ": " + perceptionData[i].ToString() + "]";
+                partTwo += "[" + i.shortName + ": " + PerceptionData[i].ToString() + "]";
             }
 
             nameWithId = part_one + partTwo;
@@ -105,7 +105,7 @@ namespace BenderAndURL
             int compareTotal = 0;
             foreach (var i in Move.HorizontalMovesAndGrab)
             {
-                if (perceptionData[i] == compareTo.perceptionData[i])
+                if (PerceptionData[i] == compareTo.PerceptionData[i])
                     compareTotal++;
             }
             return compareTotal;
@@ -113,7 +113,7 @@ namespace BenderAndURL
 
         public bool Contains(Move move, Percept percept)
         {
-            if (perceptionData[move] == percept)
+            if (PerceptionData[move] == percept)
                 return true;
             return false;
         }

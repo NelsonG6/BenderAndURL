@@ -7,17 +7,17 @@ namespace BenderAndURL
     static class InitialSettings
     {
         //Q-matrix
-        public readonly static double n; //learning rate
-        public readonly static double y; //discount
-        public readonly static double e; //random factor
+        public readonly static double Eta; //learning rate
+        public readonly static double Gamma; //discount
+        public readonly static double Epsilon; //random factor
 
         public readonly static int EpisodeLimit;
         public readonly static int StepLimit;
 
-        public readonly static int MS_Delay;
+        public readonly static int MsDelay;
 
-        public static readonly int X_Offset;
-        public static readonly int Y_Offset;
+        public static readonly int XOffset;
+        public static readonly int YOffset;
         public static readonly int EdgeLength;
         public static readonly int RoundingDigitRate;
         public static readonly int SizeOfBoard;
@@ -32,19 +32,19 @@ namespace BenderAndURL
 
         static InitialSettings()
         {
-            n = .1F; //Epsilon; do we explore or exploit. Random factor for taking a best move or random move.
-            y = .9F; //Gamma; our discounted rate.
-            e = .2F; //The learning rate
+            Eta = .1F; //Epsilon; do we explore or exploit. Random factor for taking a best move or random move.
+            Gamma = .9F; //Gamma; our discounted rate.
+            Epsilon = .2F; //The learning rate
 
             //Default limit
             EpisodeLimit = 5000;
             StepLimit = 200;
 
             //reinforcement factors
-            MS_Delay = 5;
+            MsDelay = 5;
 
-            X_Offset = 50;
-            Y_Offset = 55;
+            XOffset = 50;
+            YOffset = 55;
             EdgeLength = 75;
             RoundingDigitRate = 5;
 
